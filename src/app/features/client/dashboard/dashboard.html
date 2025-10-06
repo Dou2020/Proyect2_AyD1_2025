@@ -1,0 +1,33 @@
+<section>
+  <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Dashboard Cliente</h1>
+  <p class="mb-4 sm:mb-6 text-base sm:text-lg">Bienvenido al panel del cliente.</p>
+
+  <div class="mx-auto bg-white border border-gray-300 rounded-lg shadow-sm p-4 sm:p-8 w-full max-w-xs sm:max-w-lg">
+    <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">Perfil de Usuario</h2>
+
+    <div class="space-y-2 sm:space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <span class="font-medium text-gray-600">Nombre:</span>
+        <span class="sm:col-span-2 text-gray-900">{{ profile.name }} {{ profile.lastname }}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <span class="font-medium text-gray-600">Usuario:</span>
+        <span class="sm:col-span-2 text-gray-900">{{ profile.username }}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <span class="font-medium text-gray-600">Correo:</span>
+        <span class="sm:col-span-2 text-gray-900">{{ profile.email }}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <span class="font-medium text-gray-600">Teléfono:</span>
+        <span class="sm:col-span-2 text-gray-900">{{ profile.phoneNumber }}</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+        <span class="font-medium text-gray-600">MFA:</span>
+        <span class="sm:col-span-2 text-gray-900">
+          {{ profile.mfaActivated ? 'Activado' : 'No activado' }}
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

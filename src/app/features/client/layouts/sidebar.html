@@ -1,0 +1,85 @@
+<!-- Contenedor principal para evitar problemas de layout en la raíz -->
+<div class="h-screen w-screen bg-slate-200 flex">
+  <!-- Sidebar para pantallas medianas y grandes -->
+  <aside
+    [class.w-20]="sidebarCollapsed"
+    [class.w-64]="!sidebarCollapsed"
+    class="hidden sm:flex flex-col h-full bg-slate-900 text-slate-300 transition-all duration-300 ease-in-out shadow-lg">
+    <!-- Logo y botón para colapsar/expandir -->
+    <div class="flex items-center h-20 border-b border-slate-800 px-4">
+      <div class="flex items-center justify-between w-full" *ngIf="!sidebarCollapsed">
+        <div class="flex items-center space-x-3 overflow-hidden">
+          <svg class="h-8 w-8 text-indigo-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+          </svg>
+          <span class="text-xl font-bold text-white whitespace-nowrap">SIE</span>
+        </div>
+        <button (click)="toggleSidebar()" class="p-2 rounded-full hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400" aria-label="Colapsar sidebar">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+      </div>
+      <div class="flex items-center justify-center w-full" *ngIf="sidebarCollapsed">
+        <button (click)="toggleSidebar()" class="p-2 rounded-full hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400" aria-label="Expandir sidebar">
+          <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+        </button>
+      </div>
+    </div>
+    <!-- Menú de navegación -->
+    <nav class="flex-grow p-2 space-y-2">
+      <a *ngFor="let option of getSidebarOptions()"
+         [routerLink]="option.url"
+         [class.justify-center]="sidebarCollapsed"
+         class="flex items-center px-4 py-3 rounded-lg hover:bg-slate-800 transition-colors duration-200 group relative">
+        <svg class="h-6 w-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <circle cx="12" cy="12" r="10" />
+        </svg>
+        <span *ngIf="!sidebarCollapsed" class="ml-4 whitespace-nowrap">{{ option.name }}</span>
+        <span *ngIf="sidebarCollapsed" class="absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10">
+          {{ option.name }}
+        </span>
+      </a>
+    </nav>
+    <!-- Perfil de usuario -->
+    <div class="p-4 border-t border-slate-800">
+      <div class="flex items-center" [class.justify-center]="sidebarCollapsed">
+        <img class="h-10 w-10 rounded-full object-cover flex-shrink-0" [src]="'https://ui-avatars.com/api/?name=' + user.name.replace(' ', '+') + '&background=6366f1&color=fff'" alt="Avatar de usuario">
+        <div *ngIf="!sidebarCollapsed" class="ml-3 overflow-hidden flex-grow">
+          <p class="text-sm font-semibold text-white truncate">{{ user.name }}</p>
+          <p class="text-xs text-slate-400">Cliente</p>
+        </div>
+        <button *ngIf="!sidebarCollapsed" (click)="logout()" class="ml-2 p-2 rounded-full hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 flex-shrink-0">
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <!-- Contenido principal y Navbar para móviles -->
+  <div class="flex-1 flex flex-col">
+    <header class="sm:hidden w-full bg-slate-900 text-slate-300 flex items-center justify-between px-4 py-3 shadow-md">
+      <div class="flex items-center">
+        <svg class="h-7 w-7 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+        </svg>
+        <span class="ml-2 text-lg font-bold text-white">Cliente</span>
+      </div>
+      <button class="ml-2 p-2 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400" (click)="toggleMenu()" aria-label="Toggle menu">
+        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </header>
+    <div *ngIf="showMenu" class="sm:hidden w-full bg-slate-900 text-slate-300 flex flex-col px-4 py-2 animate-fade-in shadow-lg">
+      <a *ngFor="let option of getSidebarOptions()" [routerLink]="option.url" class="py-2.5 px-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-indigo-400 transition-colors duration-200">{{ option.name }}</a>
+      <button (click)="logout()" class="mt-2 p-2.5 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 flex items-center justify-start text-left">
+        <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+        Salir
+      </button>
+    </div>
+    <!-- Contenido de la página -->
+    <main class="p-6 flex-1 overflow-auto">
+      <h1 class="text-2xl font-bold text-slate-800">Panel de Cliente</h1>
+      <p class="mt-2 text-slate-600">Bienvenido al panel de cliente. Aquí puedes gestionar tu información y pedidos.</p>
+      <!-- Tu contenido principal va aquí -->
+    </main>
+  </div>
+</div>

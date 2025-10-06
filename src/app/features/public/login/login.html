@@ -1,0 +1,132 @@
+<section>
+  <div
+    class="flex items-center justify-center min-h-screen bg-gradient-to-br from-indigo-100 via-purple-200 to-blue-500">
+    <div class="bg-gradient-to-br from-indigo-200 via-purple-200 to-blue-200 p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200">
+
+      <div class="text-center mb-6">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-500">
+          <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor">
+            <!-- Icono de estacionamiento (P) -->
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <text x="12" y="16" text-anchor="middle" font-size="10" fill="white" font-family="Arial" font-weight="bold">P</text>
+          </svg>
+        </div>
+        <h2 class="mt-4 text-3xl font-extrabold text-gray-900">
+          ParkControl S.A.
+        </h2>
+        <p class="text-gray-500 mt-2">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <form (ngSubmit)="login()" class="space-y-6">
+        <div class="relative">
+          <label for="email" class="sr-only">Email</label>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+              <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+            </svg>
+          </div>
+          <input id="email" type="text" [(ngModel)]="email" name="email" required placeholder="tu.correo@ejemplo.com"
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+        </div>
+
+        <div class="relative">
+          <label for="password" class="sr-only">Contraseña</label>
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+              fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input id="password" type="password" [(ngModel)]="password" name="password" required placeholder="Contraseña"
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition" />
+        </div>
+
+        <div *ngIf="errorMessage" class="flex items-center text-red-600 text-sm font-semibold">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd" />
+          </svg>
+          {{ errorMessage }}
+        </div>
+
+        <button type="submit"
+          class="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition-transform transform hover:scale-105">
+          Ingresar
+        </button>
+      </form>
+
+      <div class="mt-6 text-center text-sm">
+        <button (click)="openTwoFactorModal()"
+          class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+          Usar 2FA
+        </button>
+      </div>
+
+      <div class="mt-6 text-center text-sm">
+        <a routerLink="/register" class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+          ¿No tienes cuenta? Regístrate
+        </a>
+        <span class="text-gray-400 mx-2">|</span>
+        <a routerLink="/recovery-password" class="font-medium text-indigo-600 hover:text-indigo-500 hover:underline">
+          Recuperar contraseña
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Doble Verificación -->
+  <div *ngIf="showTwoFactorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-gray-200 relative">
+
+      <!-- Botón Cerrar -->
+      <button (click)="closeTwoFactorModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+        ✕
+      </button>
+
+      <!-- Encabezado -->
+      <div class="text-center mb-6">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-500">
+          <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75M5.25 21h13.5A2.25 2.25 0 0021 18.75v-6.75a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 12v6.75A2.25 2.25 0 005.25 21z" />
+          </svg>
+        </div>
+        <h2 class="mt-4 text-2xl font-bold text-gray-900">
+          Verificación en dos pasos
+        </h2>
+        <p class="text-gray-500 mt-2">Ingresa el código que enviamos a tu correo o aplicación de autenticación</p>
+      </div>
+
+      <!-- Formulario de Código -->
+      <form (ngSubmit)="verifyTwoFactorCode()" class="space-y-6">
+        <div class="flex justify-center gap-2 sm:gap-3 flex-wrap">
+          <input type="text" maxlength="1" [(ngModel)]="code[0]" name="code0"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <input type="text" maxlength="1" [(ngModel)]="code[1]" name="code1"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <input type="text" maxlength="1" [(ngModel)]="code[2]" name="code2"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <input type="text" maxlength="1" [(ngModel)]="code[3]" name="code3"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <input type="text" maxlength="1" [(ngModel)]="code[4]" name="code4"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+          <input type="text" maxlength="1" [(ngModel)]="code[5]" name="code5"
+            class="w-10 h-10 sm:w-12 sm:h-12 text-center border border-gray-300 rounded-lg text-base sm:text-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+        </div>
+        <!-- Botón Confirmar -->
+        <button type="submit"
+          class="w-full bg-yellow-500 text-white font-bold py-3 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-4 focus:ring-yellow-400 focus:ring-opacity-50 transition-transform transform hover:scale-105">
+          Confirmar código
+        </button>
+      </form>
+    </div>
+  </div>
+
+</section>
