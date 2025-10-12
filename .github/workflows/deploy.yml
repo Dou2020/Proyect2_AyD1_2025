@@ -23,9 +23,6 @@ jobs:
       - name: Build Angular frontend
         run: npm run build --prod
 
-      - name: Verify build output
-        run: ls -R dist
-
       - name: Copy build to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -34,6 +31,7 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           source: "dist/Proyect2/*"
           target: "/var/www/parking/"
+          strip_components: 2
 
       - name: Restart Nginx
         uses: appleboy/ssh-action@v0.1.7
