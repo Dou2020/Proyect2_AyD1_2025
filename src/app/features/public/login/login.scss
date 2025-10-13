@@ -1,0 +1,94 @@
+/* Estilos para el componente login responsive */
+
+/* Mejoras para inputs en dispositivos táctiles */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Estilos para mejorar la accesibilidad en móviles */
+@media (max-width: 640px) {
+  /* Asegurar que los inputs tengan un tamaño mínimo táctil */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    min-height: 44px;
+  }
+
+  /* Mejorar el tap target para botones */
+  button {
+    min-height: 44px;
+  }
+
+  /* Ajustar el espaciado en pantallas muy pequeñas */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* Estilos para tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Ajustes específicos para tablets si son necesarios */
+}
+
+/* Estilos para desktop */
+@media (min-width: 1025px) {
+  /* Efectos hover más pronunciados en desktop */
+  button:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+}
+
+/* Mejoras para el focus en dispositivos de escritorio */
+@media (hover: hover) and (pointer: fine) {
+  input:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+}
+
+/* Asegurar que el contenido no se desborde en pantallas muy pequeñas */
+@media (max-width: 360px) {
+  .max-w-sm {
+    max-width: calc(100vw - 2rem);
+  }
+
+  /* Reducir aún más el espaciado en pantallas muy pequeñas */
+  .space-y-4 > * + * {
+    margin-top: 0.75rem;
+  }
+}
+
+/* Mejoras para la orientación horizontal en móviles */
+@media (max-height: 600px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: 100vh;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Reducir márgenes verticales en modo landscape */
+  .space-y-4 > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+}
+
+/* Asegurar que los elementos interactivos sean accesibles */
+button, a, input {
+  touch-action: manipulation;
+}
+
+/* Prevenir el zoom en iOS cuando se hace focus en inputs */
+@media screen and (max-width: 767px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    font-size: 16px;
+  }
+}

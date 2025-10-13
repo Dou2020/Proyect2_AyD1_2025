@@ -1,0 +1,128 @@
+/* Estilos para el componente 2FA */
+
+/* Animaciones suaves para el modal */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Estilos específicos para los campos de código 2FA */
+.code-input {
+  caret-color: transparent; /* Ocultar el cursor cuando no está en foco */
+}
+
+.code-input:focus {
+  caret-color: #eab308; /* Color del cursor cuando está en foco (yellow-500) */
+  transform: scale(1.05);
+}
+
+/* Animación sutil cuando se completa un campo */
+.code-input.filled {
+  background-color: #fef3c7; /* yellow-100 */
+  border-color: #eab308; /* yellow-500 */
+}
+
+/* Estilo para campo con error */
+.code-input.error {
+  border-color: #ef4444; /* red-500 */
+  background-color: #fef2f2; /* red-50 */
+  animation: shake 0.3s ease-in-out;
+}
+
+/* Animación de shake para errores */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Efecto de pulsación cuando se ingresa un código */
+@keyframes pulse-success {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.code-input.success {
+  animation: pulse-success 0.2s ease-out;
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (max-width: 640px) {
+  .code-input:focus {
+    transform: scale(1.1); /* Mayor escala en móviles para mejor visibilidad */
+  }
+}
+
+/* Estilo para cuando se está pegando código */
+.code-input.pasting {
+  border-color: #3b82f6; /* blue-500 */
+  background-color: #eff6ff; /* blue-50 */
+}
+
+/* Mejoras para inputs en dispositivos táctiles */
+input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Estilos para mejorar la accesibilidad en móviles */
+@media (max-width: 640px) {
+  /* Asegurar que los inputs tengan un tamaño mínimo táctil */
+  input[type="text"] {
+    min-height: 44px;
+  }
+
+  /* Mejorar el tap target para botones */
+  button {
+    min-height: 44px;
+  }
+}
+
+/* Mejoras para el focus en dispositivos de escritorio */
+@media (hover: hover) and (pointer: fine) {
+  input:focus {
+    box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.1);
+  }
+}
+
+/* Asegurar que los elementos interactivos sean accesibles */
+button, input {
+  touch-action: manipulation;
+}
+
+/* Prevenir el zoom en iOS cuando se hace focus en inputs */
+@media screen and (max-width: 767px) {
+  input[type="text"] {
+    font-size: 16px;
+  }
+}
+
+/* Mejoras para la orientación horizontal en móviles */
+@media (max-height: 600px) and (orientation: landscape) {
+  .min-h-screen {
+    min-height: 100vh;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  /* Reducir márgenes verticales en modo landscape */
+  .space-y-4 > * + * {
+    margin-top: 0.5rem;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+}

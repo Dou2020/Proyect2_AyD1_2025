@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { Auth as AuthService } from '../../../core/auth/auth';
 import { PublicService } from '../../../core/services/public.service';
 import { AppUser } from '../../../core/models/public/appUser';
+import { TwoFactorAuth } from '../two-factor-auth/two-factor-auth';
 
 @Component({
   selector: 'app-login',
   standalone: true, // componente standalone
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, TwoFactorAuth],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
@@ -21,8 +22,6 @@ export class Login {
   user: any = {};
 
   showTwoFactorModal = false;
-  code: string[] = ['', '', '', '', '', ''];
-  twoFactorError: string | null = null;
 
   constructor(
     private authService: AuthService,
@@ -73,11 +72,15 @@ export class Login {
     this.cdr.detectChanges();
   }
 
-  //mfa modal
   closeTwoFactorModal() {
+    this.showTwoFactorModal = false;
   }
 
-  verifyTwoFactorCode() {
+  onTwoFactorVerified(code: string) {
+    console.log('2FA Code verified:', code);
+    // Aquí podrías completar el login después de la verificación 2FA
+    this.showTwoFactorModal = false;
+    // Por ejemplo, redirigir al dashboard
+    this.router.navigate(['/admin/dashboard']);
   }
-
 }
