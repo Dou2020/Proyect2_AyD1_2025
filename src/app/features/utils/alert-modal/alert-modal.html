@@ -1,0 +1,35 @@
+<!-- Alert Container -->
+<div class="alert-container" *ngIf="alerts.length > 0">
+  <div
+    *ngFor="let alert of alerts; trackBy: trackByFn"
+    [class]="getAlertClasses(alert.type)"
+  >
+    <!-- Alert Icon -->
+    <div class="alert-icon">
+      <span [innerHTML]="getIcon(alert.type)"></span>
+    </div>
+
+    <!-- Alert Content -->
+    <div class="alert-content">
+      <!-- Title -->
+      <div class="alert-title" *ngIf="alert.title">
+        {{ alert.title }}
+        <span class="status-code" *ngIf="alert.statusCode">({{ alert.statusCode }})</span>
+      </div>
+
+      <!-- Message -->
+      <div class="alert-message">
+        {{ alert.message }}
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      class="alert-close"
+      (click)="closeAlert(alert.id)"
+      aria-label="Cerrar alerta"
+    >
+      ×
+    </button>
+  </div>
+</div>
