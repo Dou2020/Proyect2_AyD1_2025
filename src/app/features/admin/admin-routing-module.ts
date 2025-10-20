@@ -11,6 +11,9 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
+      { path: 'usuarios', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
+      { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
+      { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit, signal, AfterViewInit } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AlertService } from '../../utils/alert-modal/alert.service';
 // import { Public as PublicService } from './../../../core/services/public';
 
 export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -26,8 +27,7 @@ export function passwordMatchValidator(control: AbstractControl): ValidationErro
     CommonModule,
     FormsModule,
     RouterModule,
-    ReactiveFormsModule,
-    DecimalPipe
+    ReactiveFormsModule
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './register.html',
@@ -41,6 +41,8 @@ export class Register implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
+    private alertService: AlertService
     //private publicService: PublicService
   ) { }
 
@@ -103,7 +105,113 @@ export class Register implements OnInit {
   register(): void {
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
+
+      // Mostrar errores específicos
+      const errors = this.getFormErrors();
+      if (errors.length > 0) {
+        this.alertService.showError(`Errores en el formulario: ${errors.join(', ')}`, 400);
+      } else {
+        this.alertService.showWarning('Por favor completa todos los campos requeridos');
+      }
       return;
     }
+
+    // Simular proceso de registro
+    const payload = this.getPayload();
+    this.simulateRegistration(payload);
+  }
+
+  private simulateRegistration(payload: any): void {
+    // Simular diferentes escenarios
+    const email = payload.appUser.email;
+    const username = payload.appUser.username;
+
+    // Simular verificaciones
+    if (email === 'existing@example.com') {
+      this.alertService.showError('Este email ya está registrado', 409);
+      return;
+    }
+
+    if (username === 'admin' || username === 'root') {
+      this.alertService.showError('Nombre de usuario no disponible', 400);
+      return;
+    }
+
+    // Simular error de servidor
+    if (email.includes('error')) {
+      this.alertService.showError('Error interno del servidor. Inténtalo más tarde', 500);
+      return;
+    }
+
+    // Simular registro exitoso
+    setTimeout(() => {
+      this.alertService.showSuccess('¡Cuenta creada exitosamente! Revisa tu email para activar tu cuenta');
+      this.registrationForm.reset();
+
+      // Redirigir al login después de un breve retraso
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 2000);
+    }, 1000);
+  }
+
+  private getFormErrors(): string[] {
+    const errors: string[] = [];
+
+    if (this.name?.invalid && this.name?.touched) {
+      errors.push('Nombre requerido');
+    }
+
+    if (this.lastname?.invalid && this.lastname?.touched) {
+      errors.push('Apellido requerido');
+    }
+
+    if (this.username?.invalid && this.username?.touched) {
+      if (this.username?.errors?.['required']) {
+        errors.push('Usuario requerido');
+      } else if (this.username?.errors?.['minlength']) {
+        errors.push('Usuario debe tener al menos 4 caracteres');
+      }
+    }
+
+    if (this.email?.invalid && this.email?.touched) {
+      if (this.email?.errors?.['required']) {
+        errors.push('Email requerido');
+      } else if (this.email?.errors?.['email']) {
+        errors.push('Email inválido');
+      }
+    }
+
+    if (this.phoneNumber?.invalid && this.phoneNumber?.touched) {
+      errors.push('Teléfono requerido');
+    }
+
+    if (this.password?.invalid && this.password?.touched) {
+      if (this.password?.errors?.['required']) {
+        errors.push('Contraseña requerida');
+      } else if (this.password?.errors?.['minlength']) {
+        errors.push('Contraseña debe tener al menos 8 caracteres');
+      }
+    }
+
+    if (this.confirmPassword?.invalid && this.confirmPassword?.touched) {
+      if (this.confirmPassword?.errors?.['mismatch']) {
+        errors.push('Las contraseñas no coinciden');
+      }
+    }
+
+    if (this.locationName?.invalid && this.locationName?.touched) {
+      errors.push('Nombre de ubicación requerido');
+    }
+
+    if (this.address?.invalid && this.address?.touched) {
+      errors.push('Dirección requerida');
+    }
+
+    if (this.area?.invalid && this.area?.touched) {
+      errors.push('Área requerida');
+    }
+
+    return errors;
   }
 }
