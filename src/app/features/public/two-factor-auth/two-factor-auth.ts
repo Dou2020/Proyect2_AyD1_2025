@@ -44,9 +44,11 @@ export class TwoFactorAuth {
 
       this.publicService.twoFactorAuth({ username, code: fullCode }).subscribe({
         next: (response) => {
+          console.log('2FA verification successful:', response);
           this.authService.login(response.token);
           this.verified.emit(fullCode);
           this.closeTwoFactorModal();
+          return;
         },
         error: (err) => {
           this.twoFactorError = 'Código incorrecto. Intenta nuevamente.';

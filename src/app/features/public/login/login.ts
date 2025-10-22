@@ -72,7 +72,7 @@ export class Login {
     });
   }
 
-  completeLogin(token: string, usuario: AppUser | null, error: any) {
+  completeLogin(token: string | null, usuario: AppUser | null, error: any) {
     if (error) {
       this.alertService.showError('Error en el inicio de sesión', 500);
       this.errorMessage = 'Error en el inicio de sesión';
@@ -112,34 +112,14 @@ export class Login {
   }
 
   onTwoFactorVerified(event: any) {
-    const code = typeof event === 'string'
-      ? event
-      : event?.code ?? event?.detail?.code;
-
-    console.log('2FA event received:', event, 'resolved code:', code);
-
-    if (!code) {
-      this.alertService.showError('Código de verificación no proporcionado', 400);
+    const userData = this.authService.getUserData();
+    const token = this.authService.getToken();
+    const rol = userData?.role;
+    const username = userData?.username;
+    if (!username || !rol) {
+      this.alertService.showError('Usuario no disponible. Intenta reiniciar sesión.', 400);
       return;
     }
-
-    this.user = this.authService.getUserData();
-    const username = this.user?.username;
-    if (!username) {
-      this.alertService.showError('Usuario no encontrado para verificación de dos factores', 400);
-      return;
-    }
-
-    this.publicService.twoFactorAuth({ username, code }).subscribe({
-      next: (response) => {
-        this.alertService.showSuccess('Verificación de dos factores completada');
-        this.closeTwoFactorModal();
-        this.completeLogin(response.token, null, null);
-      },
-      error: (error) => {
-        console.error('2FA verification error:', error);
-        this.alertService.showError('Código de verificación inválido', 400);
-      }
-    });
+    this.completeLogin( token, userData, null);
   }
 }
