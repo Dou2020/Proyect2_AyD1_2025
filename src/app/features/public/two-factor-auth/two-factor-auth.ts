@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth as AuthService } from '../../../core/auth/auth';
+import { PublicService } from '../../../core/services/public.service';
 
 @Component({
   selector: 'app-two-factor-auth',
@@ -19,7 +20,7 @@ export class TwoFactorAuth {
   code: string[] = ['', '', '', '', '', ''];
   twoFactorError: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private publicService: PublicService) {}
 
   closeTwoFactorModal() {
     this.isVisible = false;
@@ -31,20 +32,29 @@ export class TwoFactorAuth {
   verifyTwoFactorCode() {
     const fullCode = this.code.join('');
     if (fullCode.length === 6) {
+
       console.log('Verifying 2FA code:', fullCode);
 
-      // Simular verificación del código
-      if (fullCode === '123456') {
-        this.verified.emit(fullCode);
-        this.closeTwoFactorModal();
-      } else {
-        this.twoFactorError = 'Código incorrecto. Intenta nuevamente.';
-        // Limpiar campos en caso de error
-        this.code = ['', '', '', '', '', ''];
-        this.clearAllInputs();
+      const userData = this.authService.getUserData();
+      const username = userData?.username;
+      if (!username) {
+        this.twoFactorError = 'Usuario no disponible. Intenta reiniciar sesión.';
+        return;
       }
-    } else {
-      this.twoFactorError = 'Por favor ingresa el código completo';
+
+      this.publicService.twoFactorAuth({ username, code: fullCode }).subscribe({
+        next: (response) => {
+          this.authService.login(response.token);
+          this.verified.emit(fullCode);
+          this.closeTwoFactorModal();
+        },
+        error: (err) => {
+          this.twoFactorError = 'Código incorrecto. Intenta nuevamente.';
+          // Limpiar campos en caso de error
+          this.code = ['', '', '', '', '', ''];
+          this.clearAllInputs();
+        }
+      });
     }
   }
 

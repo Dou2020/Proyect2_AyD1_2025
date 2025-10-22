@@ -20,7 +20,7 @@ export class Login {
   password = '';
   errorMessage = '';
 
-  user: any = {};
+  user: Partial<AppUser> | null = null;
 
   showTwoFactorModal = false;
 
@@ -41,67 +41,64 @@ export class Login {
       this.alertService.showWarning('Por favor completa todos los campos requeridos');
       return;
     }
-
+    /*
     // Validar formato de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(this.email)) {
       this.alertService.showError('Formato de email inválido', 400);
       return;
     }
+    */
+    this.publicService.login({ username: this.email, password: this.password }).subscribe({
+      next: (response) => {
+        console.log('Login response:', response);
 
-    // Simulate login process
-    if (this.email === 'douglas@example.com' && this.password === 'pass1234') {
-      // Simulate successful login
-      const fakeToken = 'fake-jwt-token';
-      const fakeUser: AppUser = {
-        id: 1,
-        email: this.email,
-        name: 'Douglas',
-        lastname: 'Admin',
-        username: 'douglas',
-        phoneNumber: '1234567890',
-        role: 'admin',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-      this.completeLogin(fakeToken, fakeUser, null);
-    } else if (this.email === 'user@example.com' && this.password === 'user123') {
-      // Simulate user requiring 2FA
-      this.alertService.showInfo('Se requiere verificación de dos factores');
-      this.openTwoFactorModal();
-    } else {
-      // Simulate different error scenarios
-      if (this.email === 'blocked@example.com') {
-        this.alertService.showError('Cuenta bloqueada. Contacta al administrador', 403);
-      } else if (this.email === 'notfound@example.com') {
-        this.alertService.showError('Usuario no encontrado', 404);
-      } else {
-        this.alertService.showError('Credenciales inválidas', 401);
+        if (response.user.mfaActivated) {
+          this.authService.saveUserData(response.user);
+          this.openTwoFactorModal();
+        }else{
+          this.completeLogin(response.token, response.user, null);
+        }
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        if (error.status === 401 && error.error?.twoFactorRequired) {
+          // Si se requiere 2FA, abrir el modal
+          this.openTwoFactorModal();
+        } else {
+          this.completeLogin('', null , error);
+        }
       }
-      this.errorMessage = 'Error de autenticación';
-    }
+    });
   }
 
-  completeLogin(token: string, user: AppUser, error: any) {
+  completeLogin(token: string, usuario: AppUser | null, error: any) {
     if (error) {
       this.alertService.showError('Error en el inicio de sesión', 500);
       this.errorMessage = 'Error en el inicio de sesión';
       return;
     }
+    if (!token) {
+      this.alertService.showError('Token no proporcionado', 400);
+      this.errorMessage = 'Token no proporcionado';
+      return;
+    }
+    var user: AppUser | null = usuario;
+    if (user == null || !user.id) {
+      user = this.authService.getUserData();
+    }
 
     // Simulate storing token and user, then redirect
     this.authService.login(token);
-    this.authService.saveUserData(user);
 
     // Mostrar mensaje de éxito
-    this.alertService.showSuccess(`¡Bienvenido de vuelta, ${user.name}!`);
+    this.alertService.showSuccess(`¡Bienvenido de vuelta, ${user?.name}!`);
 
     // Redirigir según el rol del usuario
-    if (user.role === 'admin') {
+    if (user?.role === 'ADMIN') {
       this.router.navigate(['/admin/dashboard']);
     } else {
-      this.router.navigate(['/client/dashboard']);
+      this.router.navigate(['/login']);
     }
   }
 
@@ -114,33 +111,35 @@ export class Login {
     this.showTwoFactorModal = false;
   }
 
-  onTwoFactorVerified(code: string) {
-    console.log('2FA Code verified:', code);
+  onTwoFactorVerified(event: any) {
+    const code = typeof event === 'string'
+      ? event
+      : event?.code ?? event?.detail?.code;
 
-    // Simular verificación del código 2FA
-    if (code === '123456') {
-      // Código correcto
-      this.alertService.showSuccess('Verificación de dos factores completada');
-      this.showTwoFactorModal = false;
+    console.log('2FA event received:', event, 'resolved code:', code);
 
-      // Crear usuario simulado después de 2FA
-      const fakeUser: AppUser = {
-        id: 2,
-        email: this.email,
-        name: 'Usuario',
-        lastname: 'Cliente',
-        username: 'user',
-        phoneNumber: '0987654321',
-        role: 'client',
-        isActive: true,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
-
-      this.completeLogin('fake-2fa-token', fakeUser, null);
-    } else {
-      // Código incorrecto
-      this.alertService.showError('Código de verificación inválido', 400);
+    if (!code) {
+      this.alertService.showError('Código de verificación no proporcionado', 400);
+      return;
     }
+
+    this.user = this.authService.getUserData();
+    const username = this.user?.username;
+    if (!username) {
+      this.alertService.showError('Usuario no encontrado para verificación de dos factores', 400);
+      return;
+    }
+
+    this.publicService.twoFactorAuth({ username, code }).subscribe({
+      next: (response) => {
+        this.alertService.showSuccess('Verificación de dos factores completada');
+        this.closeTwoFactorModal();
+        this.completeLogin(response.token, null, null);
+      },
+      error: (error) => {
+        console.error('2FA verification error:', error);
+        this.alertService.showError('Código de verificación inválido', 400);
+      }
+    });
   }
 }
