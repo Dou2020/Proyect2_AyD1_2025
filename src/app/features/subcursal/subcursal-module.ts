@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ClientRoutingModule } from './client-routing-module';
+
+import { SubcursalRoutingModule } from './subcursal-routing-module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    ClientRoutingModule,
     ReactiveFormsModule,
+    SubcursalRoutingModule
   ]
 })
-export class ClientModule { }
+export class SubcursalModule { }

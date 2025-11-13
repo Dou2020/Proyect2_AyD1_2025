@@ -97,6 +97,14 @@ export class Login {
     // Redirigir según el rol del usuario
     if (user?.role === 'ADMIN') {
       this.router.navigate(['/admin/dashboard']);
+    } else if (user?.role === 'CLIENT') {
+      this.router.navigate(['/client/dashboard']);
+    } else if (user?.role === 'BACKOFFICE') {
+      this.router.navigate(['/backoffice/dashboard']);
+    } else if (user?.role === 'SUCURSAL') {
+      this.router.navigate(['/subcursal/dashboard']);
+    } else if (user?.role === 'COMMERCE') {
+      this.router.navigate(['/commerce/dashboard']);
     } else {
       this.router.navigate(['/login']);
     }

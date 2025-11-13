@@ -17,6 +17,12 @@ export class PublicService {
     return this.http.post(`${this.baseUrl}/register`, payload);
   }
 
+  // reenvio de codigo de verificacion
+  resendVerificationCode(username: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register/resend-code`, { username });
+  }
+
+  // Metodo de 2FA
   twoFactorAuth( credencials:{username: string, code: string}): Observable<{token: string}>{
     return this.http.post<{token: string}>(`${this.baseUrl}/login/mfa`, credencials);
   }

@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { Sidebar as ClientSidebarComponent } from './sidebar';
+import { Sidebar as SubcursalSidebarComponent } from './sidebar';
 
 @Component({
-  selector: 'app-client-layouts',
-  imports: [CommonModule, RouterModule, ClientSidebarComponent],
+  selector: 'app-subcursal-layouts',
+  imports: [CommonModule, RouterModule, SubcursalSidebarComponent],
   template: `
     <app-sidebar></app-sidebar>
   `
 })
-export class ClientLayouts {
+export class SubcursalLayouts {
 
 }

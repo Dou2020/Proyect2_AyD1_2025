@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ClientRoutingModule } from './client-routing-module';
+import { BackofficeRoutingModule } from './backoffice-routing-module';
+
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    ClientRoutingModule,
+    BackofficeRoutingModule,
     ReactiveFormsModule,
   ]
 })
-export class ClientModule { }
+export class BackofficeModule { }
