@@ -36,7 +36,7 @@
                [class.justify-center]="sidebarCollapsed()"
                class="flex items-center px-4 py-3 rounded-lg hover:bg-slate-800 transition-colors duration-200 group relative"
                routerLinkActive="bg-indigo-600 text-indigo-100 hover:bg-indigo-700">
-               <svg class="h-6 w-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" [innerHTML]="sanitizeIcon(option.icon)"></svg>
+               <div class="h-6 w-6 flex-shrink-0" [innerHTML]="sanitizeIcon('<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; fill=&quot;none&quot; viewBox=&quot;0 0 24 24&quot; stroke-width=&quot;1.5&quot; stroke=&quot;currentColor&quot;>' + option.icon + '</svg>')"></div>
               @if (!sidebarCollapsed()) {
                 <span class="ml-4 whitespace-nowrap">{{ option.name }}</span>
               }
@@ -117,9 +117,9 @@
               <div class="flex items-center space-x-3">
                 <!-- Información del usuario -->
                 <div class="hidden sm:flex items-center space-x-3 text-sm text-slate-600">
-                  <span>Bienvenido, {{ user.name || 'Administrador' }}</span>
+                  <span>Bienvenido, {{ user?.name || 'Administrador' }}</span>
                   <div class="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-medium">
-                    {{ (user.name || 'A').charAt(0).toUpperCase() }}
+                    {{ (user?.name || 'A').charAt(0).toUpperCase() }}
                   </div>
                 </div>
                 <!-- Botón de logout para desktop -->

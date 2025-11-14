@@ -54,9 +54,11 @@ export class Login {
         console.log('Login response:', response);
 
         if (response.user.mfaActivated) {
+          // Guardar usuario temporalmente para 2FA
           this.authService.saveUserData(response.user);
           this.openTwoFactorModal();
-        }else{
+        } else {
+          // Login completo sin 2FA
           this.completeLogin(response.token, response.user, null);
         }
       },
@@ -66,7 +68,7 @@ export class Login {
           // Si se requiere 2FA, abrir el modal
           this.openTwoFactorModal();
         } else {
-          this.completeLogin('', null , error);
+          this.completeLogin('', null, error);
         }
       }
     });
@@ -83,27 +85,35 @@ export class Login {
       this.errorMessage = 'Token no proporcionado';
       return;
     }
+
     var user: AppUser | null = usuario;
     if (user == null || !user.id) {
       user = this.authService.getUserData();
     }
 
-    // Simulate storing token and user, then redirect
+    if (!user || !user.id) {
+      this.alertService.showError('Datos de usuario no válidos', 400);
+      this.errorMessage = 'Datos de usuario no válidos';
+      return;
+    }
+
+    // Guardar token y datos del usuario
     this.authService.login(token);
+    this.authService.saveUserData(user);
 
     // Mostrar mensaje de éxito
-    this.alertService.showSuccess(`¡Bienvenido de vuelta, ${user?.name}!`);
+    this.alertService.showSuccess(`¡Bienvenido de vuelta, ${user.name}!`);
 
     // Redirigir según el rol del usuario
-    if (user?.role === 'ADMIN') {
+    if (user.role === 'ADMIN') {
       this.router.navigate(['/admin/dashboard']);
-    } else if (user?.role === 'CLIENT') {
+    } else if (user.role === 'CLIENT') {
       this.router.navigate(['/client/dashboard']);
-    } else if (user?.role === 'BACKOFFICE') {
+    } else if (user.role === 'BACKOFFICE') {
       this.router.navigate(['/backoffice/dashboard']);
-    } else if (user?.role === 'SUCURSAL') {
+    } else if (user.role === 'SUCURSAL') {
       this.router.navigate(['/subcursal/dashboard']);
-    } else if (user?.role === 'COMMERCE') {
+    } else if (user.role === 'COMMERCE') {
       this.router.navigate(['/commerce/dashboard']);
     } else {
       this.router.navigate(['/login']);

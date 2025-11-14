@@ -12,6 +12,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
       { path: 'usuarios', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
+      { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
