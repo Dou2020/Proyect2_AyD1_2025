@@ -52,7 +52,7 @@ export class Auth {
   // Guardar datos del usuario en localStorage
   saveUserData(userData: AppUser): void {
     if (isPlatformBrowser(this.platformId)) {
-      console.log('Saving user data:', userData);
+      //console.log('Saving user data:', userData);
       localStorage.setItem('user_data', JSON.stringify(userData));
     }
   }
@@ -62,7 +62,7 @@ export class Auth {
     if (isPlatformBrowser(this.platformId)) {
       const data = localStorage.getItem('user_data');
       const userData = data ? JSON.parse(data) : null;
-      console.log('Retrieved user data:', userData);
+      //console.log('Retrieved user data:', userData);
       return userData;
     }
     return null;

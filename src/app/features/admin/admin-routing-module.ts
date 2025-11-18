@@ -11,7 +11,9 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
-      { path: 'usuarios', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
+      { path: 'usuarios', loadComponent: () => import('./users/users').then(c => c.Users) },
+      { path: 'tarifas-base', loadComponent: () => import('./base-free/base-free').then(c => c.BaseFree) },
+      { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
       { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
