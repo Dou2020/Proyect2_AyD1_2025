@@ -10,3 +10,19 @@ export interface UserModel {
   mfaActivated: boolean;
   daysToPay: number;
 }
+
+export interface UserSimpleModel {
+  id: number;
+  username: string;
+  email: string;
+  name: string;
+}
+
+export interface UserSubcursalModel {
+  username: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  mfaActivated: boolean;
+}
+

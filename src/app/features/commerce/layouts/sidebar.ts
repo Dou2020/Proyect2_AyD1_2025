@@ -27,10 +27,8 @@ export class Sidebar {
 
   // Opciones de la barra lateral adaptadas para commerce
   sidebarOptions: SidebarOption[] = [
-    { name: 'Dashboard', url: '#', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.5m1-1.5l1 1.5m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.25 2.25 .5-3.25.5 3.25 2.25-2.25 3 3m-7.5 0h-4.5" />' },
-    { name: 'Productos', url: '/commerce/productos', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.75 7.5h16.5-1.5-.75 0h.75m-16.5 0l1.5-1.5h13.5l1.5 1.5" />' },
-    { name: 'Ventas', url: '/commerce/ventas', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H4.5m2.25 0v3m0 0v.375c0 .621-.504 1.125-1.125 1.125H4.5m2.25-4.125V3.375c0-.621.504-1.125 1.125-1.125h9.75c.621 0 1.125.504 1.125 1.125v3.5m-9.75 0V6h12V4.5m-12 0h12" />' },
-    { name: 'Inventario', url: '/commerce/inventario', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m8.25 4.5V16.5a1.5 1.5 0 011.5-1.5h4.5a1.5 1.5 0 011.5 1.5v1.875a1.125 1.125 0 01-1.125 1.125H16.5a1.5 1.5 0 01-1.5-1.5v-1.5m0 0V14.25M16.5 16.5h2.25" />' },
+    { name: 'Dashboard', url: '/commerce/dashboard', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.5m1-1.5l1 1.5m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.25 2.25 .5-3.25.5 3.25 2.25-2.25 3 3m-7.5 0h-4.5" />' },
+    { name: 'Subcursales', url: '/commerce/subcursal', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m2.25-18v18m13.5-18v18M6.75 7.5h3m-3 4.5h3m-3 4.5h3m3-9h3m-3 4.5h3m-3 4.5h3" />' },
     { name: 'Reportes', url: '/commerce/reportes', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 17h6l3 3v-3h2V5H4v12h5z M5 6h14v8H4V6h1z" />' },
   ];
 
