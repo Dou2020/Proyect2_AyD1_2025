@@ -13,6 +13,7 @@ const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
       { path: 'usuarios', loadComponent: () => import('./users/users').then(c => c.Users) },
       { path: 'tarifas-base', loadComponent: () => import('./base-free/base-free').then(c => c.BaseFree) },
+      { path: 'subcursales', loadComponent: () => import('./subcursal/subcursal').then(c => c.Subcursal) },
       { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
       { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
