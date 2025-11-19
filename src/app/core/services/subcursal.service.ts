@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../enviroments/enviroments';
 import { SubcursalModel, SubcursalCreateModel, SubcursalUpdateModel } from '../models/admin/subcursal.model';
+import { AffiliateCommerceModel } from '../models/admin/commerce.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,11 @@ export class SubcursalService {
   // Eliminar una subcursal
   deleteSubcursal(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/sucursal/${id}`);
+  }
+
+  // Obtener comercios afiliados a una subcursal
+  getAffiliateCommerces(subcursalId: number): Observable<AffiliateCommerceModel[]> {
+    return this.http.get<AffiliateCommerceModel[]>(`${this.baseUrl}/sucursal/${subcursalId}/affiliatedCommerce`);
   }
 
 }

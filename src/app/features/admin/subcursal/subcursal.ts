@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SubcursalService } from '../../../core/services/subcursal.service';
 import { SubcursalModel, SubcursalCreateModel, SubcursalUpdateModel } from '../../../core/models/admin/subcursal.model';
 
@@ -25,7 +26,8 @@ export class Subcursal implements OnInit {
 
   constructor(
     private subcursalService: SubcursalService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.subcursalForm = this.fb.group({
       address: ['', [Validators.required, Validators.minLength(5)]],
@@ -315,5 +317,9 @@ export class Subcursal implements OnInit {
     if (!initHour || !endHour) return true; // Let required validator handle empty values
 
     return initHour < endHour;
+  }
+
+  viewCommerces(subcursalId: number) {
+    this.router.navigate(['/admin/subcursales', subcursalId, 'comercios']);
   }
 }
