@@ -31,5 +31,5 @@ export interface AffiliateCommerceModel {
 
 export interface AffiliateSubcursalModel {
   id: number;
-  subcursal: SubcursalModel;
+  sucursal?: SubcursalModel; // Hacemos opcional para manejar datos incompletos
 }

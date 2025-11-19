@@ -5,7 +5,7 @@ import { authGuard } from '../../core/auth/auth-guard';
 import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
-    {
+  {
     path: '',
     component: AdminLayoutComponent,
     canActivate: [authGuard],

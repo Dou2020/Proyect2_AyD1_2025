@@ -21,18 +21,8 @@ const routes: Routes = [
         canActivate: [authGuard]
       },
       {
-        path: 'productos',
-        loadComponent: () => import('./productos/productos').then(m => m.Productos),
-        canActivate: [authGuard]
-      },
-      {
-        path: 'ventas',
-        loadComponent: () => import('./ventas/ventas').then(m => m.Ventas),
-        canActivate: [authGuard]
-      },
-      {
-        path: 'inventario',
-        loadComponent: () => import('./inventario/inventario').then(m => m.Inventario),
+        path: 'subcursal',
+        loadComponent: () => import('./subcursal/subcursal').then(m => m.Subcursal),
         canActivate: [authGuard]
       },
       {
