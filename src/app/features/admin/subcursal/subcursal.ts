@@ -322,4 +322,8 @@ export class Subcursal implements OnInit {
   viewCommerces(subcursalId: number) {
     this.router.navigate(['/admin/subcursales', subcursalId, 'comercios']);
   }
+
+  viewFees(subcursalId: number) {
+    this.router.navigate(['/admin/subcursales', subcursalId, 'tarifas']);
+  }
 }
