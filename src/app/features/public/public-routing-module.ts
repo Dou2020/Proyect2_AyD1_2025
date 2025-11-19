@@ -29,6 +29,32 @@ const routes: Routes = [
     loadChildren: () =>
       import('../admin/admin-module').then(m => m.AdminModule)
   },
+  {
+    path: 'client',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('../client/client-module').then(m => m.ClientModule)
+  },
+    {
+    path: 'backoffice',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('../backoffice/backoffice-module').then(m => m.BackofficeModule)
+  },
+  {
+    path: 'commerce',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('../commerce/commerce-module').then(m => m.CommerceModule)
+  },
+    {
+    path: 'subcursal',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('../subcursal/subcursal-module').then(m => m.SubcursalModule)
+  },
+
+
   { path: '**', redirectTo: 'login' }
 ];
 

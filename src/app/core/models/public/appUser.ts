@@ -6,7 +6,8 @@ export interface AppUser {
   email: string;
   phoneNumber: string;
   role: string;
+  mfaActivated?: boolean;
   isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

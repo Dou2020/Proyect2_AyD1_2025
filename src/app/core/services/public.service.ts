@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from './../../../enviroments/enviroments';
+import { AppUser } from '../models/public/appUser';
 
 @Injectable({
   providedIn: 'root'
@@ -16,13 +17,19 @@ export class PublicService {
     return this.http.post(`${this.baseUrl}/register`, payload);
   }
 
-  registerClient(payload: any): Observable<any>{
-    return this.http.post(`${this.baseUrl}/client/register`, payload)
+  // reenvio de codigo de verificacion
+  resendVerificationCode(username: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/send-code`, { username });
+  }
+
+  // Metodo de 2FA
+  twoFactorAuth( credencials:{username: string, code: string}): Observable<{token: string}>{
+    return this.http.post<{token: string}>(`${this.baseUrl}/login/mfa`, credencials);
   }
 
   // Metodo de Login
-  login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(`${this.baseUrl}/login`, credentials);
+  login(credentials: { username: string; password: string }): Observable<{user: AppUser; token: string}> {
+    return this.http.post<{ user: AppUser; token: string }>(`${this.baseUrl}/login`, credentials);
   }
 
   recoveryPassword(credentials: {username: string; code: string; password: string}){

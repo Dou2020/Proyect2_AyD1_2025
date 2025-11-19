@@ -1,0 +1,143 @@
+<!-- Contenedor principal para evitar problemas de layout en la raíz -->
+    <div class="h-screen w-screen bg-slate-200 flex">
+      <!-- Sidebar para pantallas medianas y grandes -->
+      <aside
+        [class.w-20]="sidebarCollapsed()"
+        [class.w-64]="!sidebarCollapsed()"
+        class="hidden sm:flex flex-col h-full bg-slate-900 text-slate-300 transition-all duration-300 ease-in-out shadow-lg">
+
+        <!-- Logo y botón para colapsar/expandir -->
+        <div class="flex items-center h-20 border-b border-slate-800 px-4">
+          @if (!sidebarCollapsed()) {
+            <div class="flex items-center justify-between w-full">
+              <div class="flex items-center space-x-3 overflow-hidden">
+                <svg class="h-8 w-8 text-green-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.75m-16.5 0H3.75m0 0v-3.375c0-.621.504-1.125 1.125-1.125h16.5c.621 0 1.125.504 1.125 1.125v3.375" />
+                </svg>
+                <span class="text-xl font-bold text-white whitespace-nowrap">Comercio</span>
+              </div>
+              <button (click)="toggleSidebar()" class="p-2 rounded-full hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-green-400" aria-label="Colapsar sidebar">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+              </button>
+            </div>
+          } @else {
+            <div class="flex items-center justify-center w-full">
+              <button (click)="toggleSidebar()" class="p-2 rounded-full hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-green-400" aria-label="Expandir sidebar">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Menú de navegación -->
+        <nav class="flex-grow p-2 space-y-2">
+          @for (option of sidebarOptions; track option.name) {
+            <a [routerLink]="option.url"
+               [class.justify-center]="sidebarCollapsed()"
+               class="flex items-center px-4 py-3 rounded-lg hover:bg-slate-800 transition-colors duration-200 group relative"
+               routerLinkActive="bg-green-600 text-green-100 hover:bg-green-700">
+               <svg class="h-6 w-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" [innerHTML]="sanitizeIcon(option.icon)"></svg>
+              @if (!sidebarCollapsed()) {
+                <span class="ml-4 whitespace-nowrap">{{ option.name }}</span>
+              }
+              <!-- Tooltip para cuando está colapsado -->
+              @if (sidebarCollapsed()) {
+                <span class="absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10">
+                  {{ option.name }}
+                </span>
+              }
+            </a>
+          }
+        </nav>
+
+        <!-- Botón de logout en el sidebar -->
+        <div class="p-2 border-t border-slate-800">
+          <button (click)="logout()"
+                  [class.justify-center]="sidebarCollapsed()"
+                  class="w-full flex items-center px-4 py-3 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors duration-200 group relative">
+            <svg class="h-6 w-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+            @if (!sidebarCollapsed()) {
+              <span class="ml-4 whitespace-nowrap">Salir</span>
+            }
+            <!-- Tooltip para cuando está colapsado -->
+            @if (sidebarCollapsed()) {
+              <span class="absolute left-full ml-4 px-2 py-1 bg-slate-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-10">
+                Salir
+              </span>
+            }
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido principal y Navbar para móviles -->
+      <div class="flex-1 flex flex-col">
+        <!-- Navbar para pantallas pequeñas con menú hamburguesa -->
+        <header class="sm:hidden w-full bg-slate-900 text-slate-300 flex items-center justify-between px-4 py-3 shadow-md">
+          <div class="flex items-center">
+            <svg class="h-7 w-7 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.75m-16.5 0H3.75m0 0v-3.375c0-.621.504-1.125 1.125-1.125h16.5c.621 0 1.125.504 1.125 1.125v3.375" />
+            </svg>
+            <span class="ml-2 text-lg font-bold text-white">Comercio</span>
+          </div>
+          <button class="ml-2 p-2 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-green-400" (click)="toggleMenu()" aria-label="Toggle menu">
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </header>
+
+        <!-- Menú desplegable para móvil -->
+        @if (showMenu()) {
+          <div class="sm:hidden w-full bg-slate-900 text-slate-300 flex flex-col px-4 py-2 animate-fade-in shadow-lg">
+            @for (option of sidebarOptions; track option.name) {
+              <a [routerLink]="option.url"
+                 (click)="toggleMenu()"
+                 class="py-2.5 px-2 rounded-md text-slate-300 hover:bg-slate-800 hover:text-green-400 transition-colors duration-200"
+                 routerLinkActive="bg-green-600 text-white">
+                {{ option.name }}
+              </a>
+            }
+            <button (click)="logout()" class="mt-2 p-2.5 rounded-md hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-green-400 flex items-center justify-start text-left">
+              <svg class="h-5 w-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
+              Salir
+            </button>
+          </div>
+        }
+
+        <!-- Área de contenido principal -->
+        <main class="flex-1 overflow-y-auto bg-slate-100">
+          <!-- Header del contenido principal -->
+          <div class="bg-white shadow-sm border-b border-slate-200 px-4 sm:px-6 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <h1 class="text-xl sm:text-2xl font-semibold text-slate-900">{{ getCurrentPageTitle() }}</h1>
+              </div>
+              <div class="flex items-center space-x-3">
+                <!-- Información del usuario -->
+                <div class="hidden sm:flex items-center space-x-3 text-sm text-slate-600">
+                  <span>Bienvenido, {{ user.name || 'Comerciante' }}</span>
+                  <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-medium">
+                    {{ (user.name || 'C').charAt(0).toUpperCase() }}
+                  </div>
+                </div>
+                <!-- Botón de logout para desktop -->
+                <button (click)="logout()"
+                        class="hidden sm:flex items-center px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors duration-200">
+                  <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                  </svg>
+                  Salir
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contenido dinámico -->
+          <div class="p-4 sm:p-6">
+            <router-outlet></router-outlet>
+          </div>
+        </main>
+      </div>
+    </div>

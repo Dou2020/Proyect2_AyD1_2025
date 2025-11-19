@@ -12,7 +12,9 @@ export class Auth {
 
   // Guardar token en localStorage (cuando hagas login)
   login(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(this.TOKEN_KEY, token);
+    }
   }
 
   // Obtener token actual
@@ -25,8 +27,10 @@ export class Auth {
 
   // Eliminar token (logout)
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem('user_data'); // También eliminar datos del usuario
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem(this.TOKEN_KEY);
+      localStorage.removeItem('user_data'); // También eliminar datos del usuario
+    }
   }
 
   // Saber si el usuario está autenticado
@@ -47,14 +51,19 @@ export class Auth {
 
   // Guardar datos del usuario en localStorage
   saveUserData(userData: AppUser): void {
-    localStorage.setItem('user_data', JSON.stringify(userData));
+    if (isPlatformBrowser(this.platformId)) {
+      //console.log('Saving user data:', userData);
+      localStorage.setItem('user_data', JSON.stringify(userData));
+    }
   }
 
   // Obtener datos del usuario desde localStorage
   getUserData(): AppUser | null {
     if (isPlatformBrowser(this.platformId)) {
       const data = localStorage.getItem('user_data');
-      return data ? JSON.parse(data) : null;
+      const userData = data ? JSON.parse(data) : null;
+      //console.log('Retrieved user data:', userData);
+      return userData;
     }
     return null;
   }
