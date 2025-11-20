@@ -1,0 +1,424 @@
+<div class="min-h-screen bg-gray-50 p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header with Actions -->
+    <div class="mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Gestión de Incidencias</h1>
+          <p class="text-gray-600">Administra y resuelve las incidencias reportadas por los usuarios</p>
+        </div>
+        <button
+          (click)="toggleCreateForm()"
+          class="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+          </svg>
+          Nueva Incidencia
+        </button>
+      </div>
+    </div>
+
+    <!-- Create Incident Form -->
+    @if (showCreateForm()) {
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-medium text-gray-900">Crear Nueva Incidencia</h2>
+          <button
+            (click)="toggleCreateForm()"
+            class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <form [formGroup]="createIncidentForm" (ngSubmit)="createIncident()" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- URL Evidence -->
+            <div>
+              <label for="urlEvidence" class="block text-sm font-medium text-gray-700 mb-2">
+                URL de Evidencia <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="url"
+                id="urlEvidence"
+                formControlName="urlEvidence"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="https://ejemplo.com/evidencia">
+              @if (createIncidentForm.get('urlEvidence')?.invalid && createIncidentForm.get('urlEvidence')?.touched) {
+                <p class="mt-1 text-sm text-red-600">URL de evidencia es requerida</p>
+              }
+            </div>
+
+            <!-- Notes -->
+            <div>
+              <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">
+                Notas <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                id="notes"
+                formControlName="notes"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Describe la incidencia en detalle..."></textarea>
+              @if (createIncidentForm.get('notes')?.invalid && createIncidentForm.get('notes')?.touched) {
+                <p class="mt-1 text-sm text-red-600">Las notas son requeridas (mínimo 10 caracteres)</p>
+              }
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- User Had Subscription -->
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                id="userHadSubscription"
+                formControlName="userHadSubscription"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+              <label for="userHadSubscription" class="ml-2 block text-sm text-gray-700">
+                Usuario tenía suscripción
+              </label>
+            </div>
+
+            <!-- Is In Group -->
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                id="isInGroup"
+                formControlName="isInGroup"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+              <label for="isInGroup" class="ml-2 block text-sm text-gray-700">
+                Estaba en un grupo
+              </label>
+            </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              (click)="toggleCreateForm()"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              [disabled]="createIncidentForm.invalid || isCreating()"
+              class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              @if (isCreating()) {
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creando...
+              } @else {
+                Crear Incidencia
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Error Alert -->
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+        <div class="flex">
+          <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+          {{ error() }}
+        </div>
+      </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="mb-6">
+      <div class="relative max-w-md">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <input
+          type="text"
+          (input)="onSearch($event)"
+          class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+          placeholder="Buscar por ID, notas o evidencia...">
+      </div>
+    </div>
+
+    <!-- Tabs Navigation -->
+    <div class="border-b border-gray-200 mb-6">
+      <nav class="-mb-px flex space-x-8 overflow-x-auto">
+        <button
+          (click)="setActiveTab('reported')"
+          class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+          [ngClass]="activeTab() === 'reported'
+            ? 'border-red-500 text-red-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+          Reportadas ({{ filteredReportedIncidents().length }})
+        </button>
+        <button
+          (click)="setActiveTab('resolved')"
+          class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+          [ngClass]="activeTab() === 'resolved'
+            ? 'border-green-500 text-green-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+          Resueltas ({{ filteredResolvedIncidents().length }})
+        </button>
+      </nav>
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <span class="ml-3 text-gray-600">Cargando incidencias...</span>
+      </div>
+    }
+
+    <!-- Reported Incidents Tab -->
+    @if (activeTab() === 'reported' && !isLoading()) {
+      <div class="space-y-4">
+        @if (filteredReportedIncidents().length === 0) {
+          <div class="text-center py-12">
+            @if (searchTerm()) {
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron resultados</h3>
+              <p class="mt-1 text-sm text-gray-500">No hay incidencias que coincidan con tu búsqueda.</p>
+            } @else {
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No hay incidencias reportadas</h3>
+              <p class="mt-1 text-sm text-gray-500">Todas las incidencias han sido resueltas.</p>
+            }
+          </div>
+        } @else {
+          @for (incident of filteredReportedIncidents(); track incident.id) {
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <!-- Card Header -->
+              <div class="px-4 py-3 bg-red-50 border-b border-red-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                  <div class="flex items-center">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      {{ getStatusText(incident.status) }}
+                    </span>
+                    <span class="ml-2 text-sm text-gray-600">ID: #{{ incident.id }}</span>
+                  </div>
+                  <div class="mt-2 sm:mt-0 flex items-center space-x-4">
+                    @if (incident.userHadSubscription) {
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Con Suscripción
+                      </span>
+                    }
+                    @if (incident.isInGroup) {
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        En Grupo
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Incident Details -->
+                  <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm uppercase tracking-wide">Detalles de la Incidencia</h4>
+
+                    <div class="space-y-3">
+                      <div>
+                        <label class="text-sm font-medium text-gray-500">Notas:</label>
+                        <p class="text-sm text-gray-900 mt-1 p-3 bg-gray-50 rounded-md">{{ incident.notes || 'Sin notas adicionales' }}</p>
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-4">
+                        <div>
+                          <label class="text-sm font-medium text-gray-500">Usuario con Suscripción:</label>
+                          <p class="text-sm text-gray-900">{{ incident.userHadSubscription ? 'Sí' : 'No' }}</p>
+                        </div>
+                        <div>
+                          <label class="text-sm font-medium text-gray-500">En Grupo:</label>
+                          <p class="text-sm text-gray-900">{{ incident.isInGroup ? 'Sí' : 'No' }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Evidence -->
+                  <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm uppercase tracking-wide">Evidencia</h4>
+
+                    <div>
+                      @if (incident.urlEvidence) {
+                        <div class="border border-gray-300 rounded-lg p-4">
+                          <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                              <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.586-6.586a4 4 0 00-5.656-5.656l-6.586 6.586a6 6 0 108.486 8.486L20.5 13"/>
+                              </svg>
+                              <span class="text-sm font-medium text-gray-900">Evidencia adjunta</span>
+                            </div>
+                            <a
+                              [href]="incident.urlEvidence"
+                              target="_blank"
+                              class="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                              </svg>
+                              Ver
+                            </a>
+                          </div>
+                        </div>
+                      } @else {
+                        <div class="border border-dashed border-gray-300 rounded-lg p-4 text-center">
+                          <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                          </svg>
+                          <span class="text-sm text-gray-500">Sin evidencia adjunta</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="mt-6 flex justify-end">
+                  <button
+                    (click)="resolveIncident(incident.id)"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Marcar como Resuelta
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- Resolved Incidents Tab -->
+    @if (activeTab() === 'resolved' && !isLoading()) {
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        @if (filteredResolvedIncidents().length === 0) {
+          <div class="text-center py-12">
+            @if (searchTerm()) {
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No se encontraron resultados</h3>
+              <p class="mt-1 text-sm text-gray-500">No hay incidencias que coincidan con tu búsqueda.</p>
+            } @else {
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No hay incidencias resueltas</h3>
+              <p class="mt-1 text-sm text-gray-500">Las incidencias resueltas aparecerán aquí.</p>
+            }
+          </div>
+        } @else {
+          <!-- Desktop Table -->
+          <div class="hidden lg:block overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notas</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Suscripción</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">En Grupo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evidencia</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                @for (incident of filteredResolvedIncidents(); track incident.id) {
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      #{{ incident.id }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                            [ngClass]="getStatusClass(incident.status)">
+                        {{ getStatusText(incident.status) }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <div class="max-w-xs truncate">{{ incident.notes || 'Sin notas' }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                            [ngClass]="incident.userHadSubscription ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'">
+                        {{ incident.userHadSubscription ? 'Sí' : 'No' }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
+                            [ngClass]="incident.isInGroup ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'">
+                        {{ incident.isInGroup ? 'Sí' : 'No' }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      @if (incident.urlEvidence) {
+                        <a [href]="incident.urlEvidence" target="_blank"
+                           class="text-indigo-600 hover:text-indigo-500">
+                          Ver evidencia
+                        </a>
+                      } @else {
+                        <span class="text-gray-500">Sin evidencia</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="lg:hidden divide-y divide-gray-200">
+            @for (incident of filteredResolvedIncidents(); track incident.id) {
+              <div class="p-4 space-y-3">
+                <div class="flex justify-between items-start">
+                  <span class="text-sm font-medium text-gray-900">#{{ incident.id }}</span>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                        [ngClass]="getStatusClass(incident.status)">
+                    {{ getStatusText(incident.status) }}
+                  </span>
+                </div>
+
+                <div class="space-y-2">
+                  <div>
+                    <span class="text-sm text-gray-500">Notas: </span>
+                    <span class="text-sm text-gray-900">{{ incident.notes || 'Sin notas' }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">Con Suscripción:</span>
+                    <span class="text-sm text-gray-900">{{ incident.userHadSubscription ? 'Sí' : 'No' }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">En Grupo:</span>
+                    <span class="text-sm text-gray-900">{{ incident.isInGroup ? 'Sí' : 'No' }}</span>
+                  </div>
+                  @if (incident.urlEvidence) {
+                    <div>
+                      <a [href]="incident.urlEvidence" target="_blank"
+                         class="text-sm text-indigo-600 hover:text-indigo-500">
+                        Ver evidencia
+                      </a>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

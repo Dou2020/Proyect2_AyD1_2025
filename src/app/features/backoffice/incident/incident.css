@@ -1,0 +1,127 @@
+/* Custom styles for incident management */
+
+/* Tab transition animation */
+.tab-content {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Status badge animations */
+.status-badge {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Card hover effects */
+.incident-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Button hover effects */
+.resolve-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive table scroll */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for webkit browsers */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Evidence preview styles */
+.evidence-preview {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Toast notification styles */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .incident-card {
+    margin-bottom: 1rem;
+  }
+
+  .table-container {
+    font-size: 0.875rem;
+  }
+
+  .toast {
+    left: 20px;
+    right: 20px;
+    width: auto;
+  }
+}
+
+/* Error state styles */
+.error-state {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+}
+
+.error-icon {
+  color: #dc2626;
+}
+
+/* Success state styles */
+.success-state {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+}
+
+.success-icon {
+  color: #16a34a;
+}
+
+/* Empty state illustration */
+.empty-state-icon {
+  opacity: 0.6;
+  filter: grayscale(50%);
+}
