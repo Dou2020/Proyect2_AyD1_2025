@@ -8,7 +8,7 @@ import { TemporalTransferModel } from '../../models/backoffice/temporalTransfer.
   providedIn: 'root'
 })
 export class TemporalTransferService {
-    private baseUrl = environment.baseUrl;
+  private baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient) {}
 

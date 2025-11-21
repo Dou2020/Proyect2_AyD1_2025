@@ -8,9 +8,9 @@ import { SubscriptionModel } from '../../models/admin/subscription.model';
   providedIn: 'root'
 })
 export class SubscriptionService {
-    private baseUrl = environment.baseUrl;
+  private baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Obtener todas las suscripciones
   getSubscriptions(): Observable<SubscriptionModel[]> {

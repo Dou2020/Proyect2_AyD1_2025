@@ -1,1 +1,121 @@
-<p>link-vehicles works!</p>
+<section class="space-y-10">
+
+    <!-- ============================
+        SECCIÓN 1: REGISTRAR VEHÍCULO
+    ============================== -->
+    <section class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+
+        <h2 class="text-2xl font-bold text-slate-900 mb-2">Registrar un carro</h2>
+        <p class="text-slate-600 mb-6">
+            Aquí puedes registrar un carro de tu propiedad proporcionando su placa, tipo y color.
+        </p>
+
+        <form (ngSubmit)="submitVehicle()" [formGroup]="vehicleForm" class="space-y-5">
+
+            <!-- Placa -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Placa</label>
+                <input type="text" formControlName="plate"
+                       class="w-full px-4 py-2 rounded-lg border border-slate-300
+                              focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- Tipo -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Tipo de vehículo</label>
+                <select formControlName="type"
+                        class="w-full px-4 py-2 rounded-lg border border-slate-300
+                               focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="T2R">Vehículo de 2 ruedas</option>
+                    <option value="T4R">Vehículo de 4 ruedas</option>
+                </select>
+            </div>
+
+            <!-- Color -->
+            <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Color</label>
+                <select formControlName="color"
+                        class="w-full px-4 py-2 rounded-lg border border-slate-300
+                               focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="BLUE">Azul</option>
+                    <option value="GREEN">Verde</option>
+                    <option value="PURPLE">Morado</option>
+                    <option value="SKY">Celeste</option>
+                    <option value="RED">Rojo</option>
+                    <option value="GRAY">Gris</option>
+                    <option value="BACK">Negro</option>
+                    <option value="WHITE">Blanco</option>
+                    <option value="YELLOW">Amarillo</option>
+                    <option value="PINK">Rosado</option>
+                    <option value="ORANGE">Anaranjado</option>
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Registrar vehículo
+            </button>
+
+        </form>
+
+    </section>
+
+    <!-- ============================
+       SECCIÓN 2: LINKEAR VEHÍCULO
+    ============================== -->
+    <section class="bg-white rounded-xl p-6 shadow-md border border-slate-200">
+
+        <h2 class="text-2xl font-bold text-slate-900 mb-2">Linkear un carro</h2>
+        <p class="text-slate-600 mb-6">
+            Si el vehículo ya existe en el sistema, puedes buscarlo por placa y vincularlo a tu cuenta.
+        </p>
+
+        <!-- Barra de búsqueda -->
+        <div class="flex gap-3 mb-6">
+            <input type="text" [(ngModel)]="searchPlate"
+                   placeholder="Ingrese placa"
+                   class="flex-1 px-4 py-2 rounded-lg border border-slate-300
+                          focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+            <button (click)="searchVehicle()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+                Buscar
+            </button>
+        </div>
+
+        <!-- Resultado -->
+        @if (searchedVehicle) {
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-4 shadow-sm">
+
+                <h4 class="text-lg font-semibold text-slate-800 mb-3">Resultado</h4>
+
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-slate-600">
+                            <span class="font-bold">Placa:</span> {{ searchedVehicle.plate }}
+                        </p>
+                        <p class="text-sm text-slate-600">
+                            <span class="font-bold">Tipo:</span> {{ searchedVehicle.type }}
+                        </p>
+                        <p class="text-sm text-slate-600">
+                            <span class="font-bold">Color:</span> {{ searchedVehicle.color }}
+                        </p>
+                    </div>
+
+                    <button (click)="linkVehicle(searchedVehicle.id)"
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-700 transition">
+                        Linkear vehículo
+                    </button>
+                </div>
+            </div>
+        }
+
+        @if (searchNotFound) {
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
+                No se encontró ningún vehículo con esa placa.
+            </div>
+        }
+
+    </section>
+
+</section>
