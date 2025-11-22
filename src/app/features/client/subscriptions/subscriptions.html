@@ -1,0 +1,87 @@
+<section class="p-6">
+
+    <h1 class="text-2xl font-bold mb-6">Suscripciones disponibles</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        @if (subscriptions.length == 0) {
+        <div class="col-span-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-center font-medium italic">
+            No hay suscripciones disponibles.
+        </div>
+        }
+
+        @for (s of subscriptions; track s.id) {
+        <div class="rounded-lg p-5 shadow bg-white">
+
+            <h2 class="font-bold text-xl mb-2">{{ s.name }}</h2>
+
+            <p class="text-gray-700"><strong>Precio:</strong> Q{{ s.pricePerMonth }}</p>
+            <p class="text-gray-700"><strong>Horas libres/mes:</strong> {{ s.freeHoursPerMonth }}</p>
+            <p class="text-gray-700"><strong>Descuento base:</strong> {{ s.baseDiscount }}%</p>
+            <p class="text-gray-700"><strong>Descuento anual:</strong> {{ s.yearDiscount }}%</p>
+
+            @if (s.description) {
+            <p class="text-sm text-gray-500 mt-2">
+                {{ s.description }}
+            </p>
+            }
+
+            <button class="mt-4 bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700 transition"
+                (click)="openBuyModal(s.id)">
+                Comprar suscripción
+            </button>
+        </div>
+        }
+    </div>
+
+</section>
+
+
+
+@if (showModal) {
+<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+
+        <h3 class="text-xl font-bold mb-4">Selecciona un vehículo</h3>
+
+        <p class="text-gray-600 text-sm mb-4">
+            Vincula esta suscripción con uno de tus vehículos registrados.
+        </p>
+
+        <!-- SELECT -->
+        <select class="w-full border px-3 py-2 rounded mb-4" [(ngModel)]="selectedVehicleId">
+            <option [ngValue]="null" disabled selected>Selecciona un vehículo</option>
+
+            @for (v of ownedVehicles; track v.id) {
+            <option [value]="v.id">
+                {{ v.vehicle.plate }} — {{ v.vehicle.color }} ({{ v.vehicle.type }})
+            </option>
+            }
+        </select>
+        
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-1">Meses a contratar</label>
+            <input type="number"
+                min="1"
+                class="w-full border px-3 py-2 rounded"
+                [(ngModel)]="selectedMonths"
+                >
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="flex justify-end space-x-3 mt-6">
+            <button class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition" (click)="closeModal()">
+                Cancelar
+            </button>
+
+            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                (click)="confirmPurchase()">
+                Aceptar
+            </button>
+        </div>
+
+    </div>
+
+</div>
+}

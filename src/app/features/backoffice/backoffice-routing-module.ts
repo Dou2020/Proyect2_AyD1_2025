@@ -11,6 +11,8 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
+      { path: 'temporal-transfer', loadComponent: () => import('./temporal-transfer/temporal-transfer').then(c => c.TemporalTransfer) },
+      { path: 'incident', loadComponent: () => import('./incident/incident').then(c => c.Incident) },
       { path: 'gestion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'operaciones', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder

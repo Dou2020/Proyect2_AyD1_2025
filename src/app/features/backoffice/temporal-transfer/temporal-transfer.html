@@ -1,0 +1,386 @@
+<div class="min-h-screen bg-gray-50 p-4 md:p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Gestión de Transferencias Temporales</h1>
+      <p class="text-gray-600">Administra las solicitudes de transferencias temporales de vehículos</p>
+    </div>
+
+    <!-- Error Alert -->
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
+        <div class="flex">
+          <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+          {{ error() }}
+        </div>
+      </div>
+    }
+
+    <!-- Tabs Navigation -->
+    <div class="border-b border-gray-200 mb-6">
+      <nav class="-mb-px flex space-x-8 overflow-x-auto">
+        <button
+          (click)="setActiveTab('pending')"
+          class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+          [ngClass]="activeTab() === 'pending'
+            ? 'border-indigo-500 text-indigo-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+          Pendientes ({{ filteredPendingTransfers().length }})
+        </button>
+        <button
+          (click)="setActiveTab('all')"
+          class="whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm"
+          [ngClass]="activeTab() === 'all'
+            ? 'border-indigo-500 text-indigo-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'">
+          Historial ({{ filteredAllTransfers().length }})
+        </button>
+      </nav>
+    </div>
+
+    <!-- Search Filters -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Filtros de Búsqueda</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Placa Filter -->
+        <div>
+          <label for="search-plate" class="block text-sm font-medium text-gray-700 mb-1">
+            Buscar por Placa
+          </label>
+          <div class="relative">
+            <input
+              id="search-plate"
+              type="text"
+              [ngModel]="searchPlate()"
+              (ngModelChange)="searchPlate.set($event)"
+              placeholder="Ingrese placa..."
+              class="block w-full pl-3 pr-10 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+            @if (searchPlate()) {
+              <button
+                (click)="clearPlateFilter()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg class="w-4 h-4 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Color Filter -->
+        <div>
+          <label for="search-color" class="block text-sm font-medium text-gray-700 mb-1">
+            Buscar por Color
+          </label>
+          <div class="relative">
+            <input
+              id="search-color"
+              type="text"
+              [ngModel]="searchColor()"
+              (ngModelChange)="searchColor.set($event)"
+              placeholder="Ingrese color..."
+              class="block w-full pl-3 pr-10 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+            @if (searchColor()) {
+              <button
+                (click)="clearColorFilter()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg class="w-4 h-4 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Type Filter -->
+        <div>
+          <label for="search-type" class="block text-sm font-medium text-gray-700 mb-1">
+            Buscar por Tipo
+          </label>
+          <div class="relative">
+            <input
+              id="search-type"
+              type="text"
+              [ngModel]="searchType()"
+              (ngModelChange)="searchType.set($event)"
+              placeholder="Ingrese tipo..."
+              class="block w-full pl-3 pr-10 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+            @if (searchType()) {
+              <button
+                (click)="clearTypeFilter()"
+                class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg class="w-4 h-4 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Clear All Filters Button -->
+      @if (searchPlate() || searchColor() || searchType()) {
+        <div class="mt-4">
+          <button
+            (click)="clearAllFilters()"
+            class="inline-flex items-center px-3 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 border border-indigo-200 rounded-md hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Limpiar todos los filtros
+          </button>
+        </div>
+      }
+
+      <!-- Results Summary -->
+      @if (activeTab() === 'pending') {
+        <div class="mt-4 text-sm text-gray-600">
+          Mostrando {{ filteredPendingTransfers().length }} de {{ pendingTransfers().length }} transferencias pendientes
+        </div>
+      } @else {
+        <div class="mt-4 text-sm text-gray-600">
+          Mostrando {{ filteredAllTransfers().length }} de {{ allTransfers().length }} transferencias en el historial
+        </div>
+      }
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <span class="ml-3 text-gray-600">Cargando transferencias...</span>
+      </div>
+    }
+
+    <!-- Pending Transfers Tab -->
+    @if (activeTab() === 'pending' && !isLoading()) {
+      <div class="space-y-4">
+        @if (filteredPendingTransfers().length === 0) {
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8h.01M4 6h.01M4 13h.01M20 13h.01"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay transferencias pendientes</h3>
+            <p class="mt-1 text-sm text-gray-500">
+              @if (searchPlate() || searchColor() || searchType()) {
+                No se encontraron resultados con los filtros aplicados.
+              } @else {
+                Todas las solicitudes han sido procesadas.
+              }
+            </p>
+          </div>
+        } @else {
+          @for (transfer of filteredPendingTransfers(); track transfer.id) {
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+              <!-- Card Header -->
+              <div class="px-4 py-3 bg-yellow-50 border-b border-yellow-200">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between">
+                  <div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      {{ transfer.status }}
+                    </span>
+                    <span class="ml-2 text-sm text-gray-600">ID: #{{ transfer.id }}</span>
+                  </div>
+                  <div class="mt-2 sm:mt-0">
+                    <span class="text-sm text-gray-500">Válido hasta: {{ formatDate(transfer.validUntil) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Body -->
+              <div class="p-4">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <!-- Vehicle Information -->
+                  <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm uppercase tracking-wide">Información de Vehículos</h4>
+
+                    <!-- Original Vehicle -->
+                    <div class="bg-gray-50 rounded-lg p-3">
+                      <h5 class="text-sm font-medium text-gray-700 mb-2">Vehículo Original</h5>
+                      <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div><span class="text-gray-500">Placa:</span> {{ transfer.originalVehicle.plate }}</div>
+                        <div><span class="text-gray-500">Color:</span> {{ transfer.originalVehicle.color }}</div>
+                        <div class="col-span-2"><span class="text-gray-500">Tipo:</span> {{ transfer.originalVehicle.type }}</div>
+                      </div>
+                    </div>
+
+                    <!-- Second Vehicle -->
+                    <div class="bg-blue-50 rounded-lg p-3">
+                      <h5 class="text-sm font-medium text-gray-700 mb-2">Vehículo de Reemplazo</h5>
+                      <div class="grid grid-cols-2 gap-2 text-sm">
+                        <div><span class="text-gray-500">Placa:</span> {{ transfer.secondVehicle.plate }}</div>
+                        <div><span class="text-gray-500">Color:</span> {{ transfer.secondVehicle.color }}</div>
+                        <div class="col-span-2"><span class="text-gray-500">Tipo:</span> {{ transfer.secondVehicle.type }}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Transfer Details -->
+                  <div class="space-y-4">
+                    <h4 class="font-medium text-gray-900 text-sm uppercase tracking-wide">Detalles de la Transferencia</h4>
+
+                    <div class="space-y-3">
+                      <div>
+                        <label class="text-sm font-medium text-gray-500">Razón:</label>
+                        <p class="text-sm text-gray-900">{{ transfer.reason }}</p>
+                      </div>
+
+                      <div>
+                        <label class="text-sm font-medium text-gray-500">Justificación:</label>
+                        <p class="text-sm text-gray-900">{{ transfer.justification }}</p>
+                      </div>
+
+                      <div class="grid grid-cols-2 gap-4">
+                        <div>
+                          <label class="text-sm font-medium text-gray-500">Válido desde:</label>
+                          <p class="text-sm text-gray-900">{{ formatDate(transfer.validFrom) }}</p>
+                        </div>
+                        <div>
+                          <label class="text-sm font-medium text-gray-500">Válido hasta:</label>
+                          <p class="text-sm text-gray-900">{{ formatDate(transfer.validUntil) }}</p>
+                        </div>
+                      </div>
+
+                      @if (transfer.evidenceUrl) {
+                        <div>
+                          <label class="text-sm font-medium text-gray-500">Evidencia:</label>
+                          <a [href]="transfer.evidenceUrl" target="_blank"
+                             class="text-sm text-indigo-600 hover:text-indigo-500">
+                            Ver documento
+                          </a>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-6 flex flex-col sm:flex-row gap-2 sm:justify-end">
+                  <button
+                    (click)="banTransfer(transfer.id)"
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors">
+                    Banear
+                  </button>
+                  <button
+                    (click)="rejectTransfer(transfer.id)"
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-red-700 bg-red-100 hover:bg-red-200 rounded-md transition-colors">
+                    Rechazar
+                  </button>
+                  <button
+                    (click)="acceptTransfer(transfer.id)"
+                    class="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md transition-colors">
+                    Aceptar
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+
+    <!-- All Transfers Tab -->
+    @if (activeTab() === 'all' && !isLoading()) {
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        @if (filteredAllTransfers().length === 0) {
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay transferencias en el historial</h3>
+            <p class="mt-1 text-sm text-gray-500">
+              @if (searchPlate() || searchColor() || searchType()) {
+                No se encontraron resultados con los filtros aplicados.
+              } @else {
+                Las transferencias procesadas aparecerán aquí.
+              }
+            </p>
+          </div>
+        } @else {
+          <!-- Desktop Table -->
+          <div class="hidden lg:block overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo Original</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehículo Reemplazo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Válido Hasta</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Razón</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                @for (transfer of filteredAllTransfers(); track transfer.id) {
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      #{{ transfer.id }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                            [ngClass]="getStatusClass(transfer.status)">
+                        {{ transfer.status }}
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div>{{ transfer.originalVehicle.plate }}</div>
+                      <div class="text-gray-500">{{ transfer.originalVehicle.type }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <div>{{ transfer.secondVehicle.plate }}</div>
+                      <div class="text-gray-500">{{ transfer.secondVehicle.type }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {{ formatDate(transfer.validUntil) }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                      <div class="max-w-xs truncate">{{ transfer.reason }}</div>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mobile Cards -->
+          <div class="lg:hidden divide-y divide-gray-200">
+            @for (transfer of filteredAllTransfers(); track transfer.id) {
+              <div class="p-4 space-y-3">
+                <div class="flex justify-between items-start">
+                  <span class="text-sm font-medium text-gray-900">#{{ transfer.id }}</span>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
+                        [ngClass]="getStatusClass(transfer.status)">
+                    {{ transfer.status }}
+                  </span>
+                </div>
+
+                <div class="space-y-2">
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">Original:</span>
+                    <span class="text-sm text-gray-900">{{ transfer.originalVehicle.plate }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">Reemplazo:</span>
+                    <span class="text-sm text-gray-900">{{ transfer.secondVehicle.plate }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-gray-500">Válido hasta:</span>
+                    <span class="text-sm text-gray-900">{{ formatDate(transfer.validUntil) }}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="text-sm text-gray-500">Razón: </span>
+                  <span class="text-sm text-gray-900">{{ transfer.reason }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

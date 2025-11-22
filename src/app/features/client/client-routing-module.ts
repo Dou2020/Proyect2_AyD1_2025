@@ -14,10 +14,24 @@ const routes: Routes = [
         path: 'dashboard',
         loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard)
       },
-      { path: 'profile', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: 'transactions', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: 'support', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+      { path: 'vehicles', 
+        loadComponent: () => import('./vehicles/vehicles').then(c => c.Vehicles) 
+      }, 
+      { path: 'subscriptions', 
+        loadComponent: () => import('./subscriptions/subscriptions').then(c => c.Subscriptions) 
+      }, 
+      { 
+        path: 'vehicles/link', 
+        loadComponent: () => import('./link-vehicles/link-vehicles').then(c => c.LinkVehicles) 
+      },
+      { 
+        path: 'vehicles/facturation', 
+        loadComponent: () => import('./facturation/facturation').then(c => c.Facturation) 
+      },
+      { 
+        path: '', 
+        redirectTo: 'dashboard', pathMatch: 'full' 
+      }
     ]
   }
 ];

@@ -28,9 +28,8 @@ export class Sidebar {
   // Opciones de la barra lateral - adaptadas para backoffice
   sidebarOptions: SidebarOption[] = [
     { name: 'Dashboard', url: '/backoffice/dashboard', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 1.5m1-1.5l1 1.5m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.25 2.25 .5-3.25.5 3.25 2.25-2.25 3 3m-7.5 0h-4.5" />' },
-    { name: 'Gestión', url: '/backoffice/gestion', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-4.663v-.005A9.345 9.345 0 0112 12c-3.057 0-5.764.98-7.922 2.625" />' },
-    { name: 'Operaciones', url: '/backoffice/operaciones', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-1.007 1.11-1.226.554-.22 1.197-.22 1.752 0 .549.219 1.016.684 1.11 1.226l.793.793A.75.75 0 019.75 4.5h4.5a.75.75 0 010 1.5H12a.75.75 0 00-.75.75v3.5a.75.75 0 001.5 0V7.5h2.25a2.25 2.25 0 000-4.5H9.75a2.25 2.25 0 00-2.25 2.25v1.07l.594-.565z" />' },
-    { name: 'Reportes', url: '/backoffice/reportes', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 17h6l3 3v-3h2V5H4v12h5z M5 6h14v8H4V6h1z" />' },
+    { name: 'Transferencias', url: '/backoffice/temporal-transfer', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />' },
+    { name: 'Incidencias', url: '/backoffice/incident', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />' },
   ];
 
   constructor(private authService: AuthService, private router: Router) {}

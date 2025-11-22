@@ -1,1 +1,629 @@
-<p>reports works!</p>
+<div class="min-h-screen bg-gray-50 p-4 lg:p-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Sistema de Reportes</h1>
+      <p class="text-gray-600">Genera y visualiza diferentes tipos de reportes del sistema</p>
+    </div>
+
+    <!-- Report Type Selector -->
+    <div class="mb-6">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Seleccionar Tipo de Reporte</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          @for (reportType of reportTypes; track reportType.key) {
+            <button
+              (click)="selectReportType(reportType.key)"
+              class="p-4 border-2 rounded-lg text-center transition-all duration-200 hover:shadow-md"
+              [class.border-blue-500]="selectedReportType() === reportType.key"
+              [class.bg-blue-50]="selectedReportType() === reportType.key"
+              [class.text-blue-700]="selectedReportType() === reportType.key"
+              [class.border-gray-200]="selectedReportType() !== reportType.key"
+              [class.text-gray-700]="selectedReportType() !== reportType.key"
+            >
+              <span class="font-medium">{{ reportType.label }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <!-- Form Section -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-6">Parámetros del Reporte</h3>
+
+        <!-- Occupations Form -->
+        @if (selectedReportType() === 'occupations') {
+          <form [formGroup]="occupationsForm" (ngSubmit)="generateOccupationsReport()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">ID de Sucursal (opcional)</label>
+              <input
+                type="number"
+                formControlName="sucursalId"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ingrese el ID de la sucursal (dejar vacío para todos)"
+              >
+            </div>
+            <button
+              type="submit"
+              [disabled]="loading()"
+              class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (loading()) {
+                <span class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generando...
+                </span>
+              } @else {
+                <span>Generar Reporte</span>
+              }
+            </button>
+          </form>
+        }
+
+        <!-- Billing Form -->
+        @if (selectedReportType() === 'billing') {
+          <form [formGroup]="billingForm" (ngSubmit)="generateBillingReport()" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">ID de Sucursal (opcional)</label>
+              <input
+                type="number"
+                formControlName="sucursalId"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ingrese el ID de la sucursal (dejar vacío para todas)"
+              >
+            </div>
+            <button
+              type="submit"
+              [disabled]="loading()"
+              class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (loading()) {
+                <span class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generando...
+                </span>
+              } @else {
+                <span>Generar Reporte</span>
+              }
+            </button>
+          </form>
+        }
+
+        <!-- Subscription Form -->
+        @if (selectedReportType() === 'subscription') {
+          <form [formGroup]="subscriptionForm" (ngSubmit)="generateSubscriptionReport()" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Plan Suscripción (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="subscriptionPlanId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del plan de suscripción"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Estado (opcional)</label>
+                <select
+                  formControlName="activeOrInactive"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option [value]="null">Todos los estados</option>
+                  <option [value]="true">Activo</option>
+                  <option [value]="false">Inactivo</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Usuario (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="userId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del usuario"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Vehículo (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="vehicleId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del vehículo"
+                >
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Placa Vehículo (opcional)</label>
+              <input
+                type="text"
+                formControlName="vehiclePlate"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ej: ABC-123"
+              >
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+            </div>
+            <button
+              type="submit"
+              [disabled]="loading()"
+              class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (loading()) {
+                <span class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generando...
+                </span>
+              } @else {
+                <span>Generar Reporte</span>
+              }
+            </button>
+          </form>
+        }
+
+        <!-- Commerce Benefits Form -->
+        @if (selectedReportType() === 'commerce') {
+          <form [formGroup]="commerceBenefitsForm" (ngSubmit)="generateCommerceBenefitsReport()" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Comercio (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="commerceId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del comercio"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Cliente (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="clientId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del cliente"
+                >
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Placa Vehículo (opcional)</label>
+              <input
+                type="text"
+                formControlName="vehiclePlate"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ej: ABC-123"
+              >
+            </div>
+            <button
+              type="submit"
+              [disabled]="loading()"
+              class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (loading()) {
+                <span class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generando...
+                </span>
+              } @else {
+                <span>Generar Reporte</span>
+              }
+            </button>
+          </form>
+        }
+
+        <!-- Incidents Form -->
+        @if (selectedReportType() === 'incidents') {
+          <form [formGroup]="incidentsForm" (ngSubmit)="generateIncidentsReport()" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="startDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin (opcional)</label>
+                <input
+                  type="date"
+                  formControlName="endDate"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Ticket (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="ticketId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del ticket"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ID Cliente (opcional)</label>
+                <input
+                  type="number"
+                  formControlName="clientId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="ID del cliente"
+                >
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Placa Vehículo (opcional)</label>
+              <input
+                type="text"
+                formControlName="vehiclePlate"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Ej: ABC-123"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Estado (opcional)</label>
+              <select
+                formControlName="status"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Todos los estados</option>
+                <option value="pending">Pendiente</option>
+                <option value="resolved">Resuelto</option>
+                <option value="in_progress">En Progreso</option>
+                <option value="cancelled">Cancelado</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Descripción (opcional)</label>
+              <textarea
+                formControlName="description"
+                rows="3"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Descripción del incidente"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              [disabled]="loading()"
+              class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+            >
+              @if (loading()) {
+                <span class="inline-flex items-center">
+                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Generando...
+                </span>
+              } @else {
+                <span>Generar Reporte</span>
+              }
+            </button>
+          </form>
+        }
+      </div>
+
+      <!-- Results Section -->
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">Resultados del Reporte</h3>
+          @if (occupationsReport() || billingReport() || subscriptionReport().length > 0 || commerceBenefitsReport().length > 0 || incidentsReport().length > 0) {
+            <button
+              (click)="exportReport()"
+              class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              Exportar PDF
+            </button>
+          }
+        </div>
+
+        <!-- Occupations Report Results -->
+        @if (occupationsReport() && selectedReportType() === 'occupations') {
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-3">Ocupaciones - {{ occupationsReport()!.sucursalAddress }}</h4>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Capacidad 2R</p>
+                  <p class="font-semibold text-lg">{{ occupationsReport()!.capacity2R }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Ocupadas 2R</p>
+                  <p class="font-semibold text-lg">{{ occupationsReport()!.current2R }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Capacidad 4R</p>
+                  <p class="font-semibold text-lg">{{ occupationsReport()!.capacity4R }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Ocupadas 4R</p>
+                  <p class="font-semibold text-lg">{{ occupationsReport()!.current4R }}</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Ocupación Total</p>
+                  <div class="flex items-center mt-2">
+                    <div class="flex-1 bg-gray-200 rounded-full h-2 mr-3">
+                      <div
+                        class="bg-blue-600 h-2 rounded-full"
+                        [style.width.%]="((occupationsReport()!.current2R + occupationsReport()!.current4R) / (occupationsReport()!.capacity2R + occupationsReport()!.capacity4R)) * 100"
+                      ></div>
+                    </div>
+                    <span class="text-sm font-medium">
+                      {{ ((occupationsReport()!.current2R + occupationsReport()!.current4R) / (occupationsReport()!.capacity2R + occupationsReport()!.capacity4R) * 100).toFixed(1) }}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Billing Report Results -->
+        @if (billingReport() && selectedReportType() === 'billing') {
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-3">Facturación - {{ billingReport()!.sucursal.address }}</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm mb-4">
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Total Generado</p>
+                  <p class="font-semibold text-lg text-green-600">${{ billingReport()!.totalGenerated.toFixed(2) }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Descuentos</p>
+                  <p class="font-semibold text-lg text-orange-600">${{ billingReport()!.totalCoveredByDiscounts.toFixed(2) }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Suscripciones</p>
+                  <p class="font-semibold text-lg text-blue-600">${{ billingReport()!.totalCoveredBySubscriptions.toFixed(2) }}</p>
+                </div>
+                <div class="bg-white p-3 rounded border">
+                  <p class="text-gray-600">Excesos</p>
+                  <p class="font-semibold text-lg text-red-600">${{ billingReport()!.totalExcessCharged.toFixed(2) }}</p>
+                </div>
+              </div>
+
+              @if (billingReport()!.tickets.length > 0) {
+                <div class="bg-white rounded border">
+                  <div class="p-3 border-b">
+                    <h5 class="font-medium">Tickets ({{ billingReport()!.tickets.length }})</h5>
+                  </div>
+                  <div class="max-h-64 overflow-y-auto">
+                    <div class="divide-y">
+                      @for (ticket of billingReport()!.tickets; track ticket.id) {
+                        <div class="p-3 text-sm">
+                          <div class="flex justify-between items-start">
+                            <div>
+                              <p class="font-medium">#{{ ticket.id }}</p>
+                              <p class="text-gray-600">{{ ticket.createdAt | date:'short' }}</p>
+                              @if (ticket.discountType) {
+                                <span class="inline-block mt-1 px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">
+                                  {{ ticket.discountType }}
+                                </span>
+                              }
+                            </div>
+                            <div class="text-right">
+                              <p class="font-semibold">${{ ticket.realPrice.toFixed(2) }}</p>
+                              @if (ticket.price !== ticket.realPrice) {
+                                <p class="text-gray-500 line-through text-xs">${{ ticket.price.toFixed(2) }}</p>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Subscription Report Results -->
+        @if (subscriptionReport().length > 0 && selectedReportType() === 'subscription') {
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-3">Suscripciones ({{ subscriptionReport().length }})</h4>
+              <div class="space-y-3 max-h-96 overflow-y-auto">
+                @for (subscription of subscriptionReport(); track subscription.subscription.id) {
+                  <div class="bg-white p-4 rounded border">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                        <h5 class="font-medium text-gray-900">{{ subscription.subscription.name }}</h5>
+                        <p class="text-sm text-gray-600 mb-2">{{ subscription.appUser.name }} ({{ subscription.appUser.username }})</p>
+                        <div class="space-y-1 text-sm">
+                          <p><span class="font-medium">Vehículo:</span> {{ subscription.vehicle.plate }} - {{ subscription.vehicle.color }} {{ subscription.vehicle.type }}</p>
+                          <p><span class="font-medium">Válido hasta:</span> {{ subscription.validUntil | date:'short' }}</p>
+                          <p><span class="font-medium">Horas actuales:</span> {{ subscription.currentHours }}/{{ subscription.freeHoursPerMonth }}</p>
+                        </div>
+                      </div>
+                      <div class="space-y-1 text-sm">
+                        <p><span class="font-medium">Precio mensual:</span> ${{ subscription.subscription.pricePerMonth.toFixed(2) }}</p>
+                        <p><span class="font-medium">Descuento base:</span> {{ subscription.subscription.baseDiscount }}%</p>
+                        <p><span class="font-medium">Descuento anual:</span> {{ subscription.subscription.yearDiscount }}%</p>
+                        @if (subscription.notes) {
+                          <p><span class="font-medium">Notas:</span> {{ subscription.notes }}</p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Commerce Benefits Report Results -->
+        @if (commerceBenefitsReport().length > 0 && selectedReportType() === 'commerce') {
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-3">Beneficios a Comercios ({{ commerceBenefitsReport().length }})</h4>
+              <div class="space-y-3 max-h-96 overflow-y-auto">
+                @for (commerce of commerceBenefitsReport(); track $index) {
+                  <div class="bg-white p-4 rounded border">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div>
+                        <h5 class="font-medium text-gray-900">{{ commerce.commerceName }}</h5>
+                        <p class="text-sm text-gray-600 mb-2">{{ commerce.sucursalAddress }}</p>
+                        <div class="space-y-1 text-sm">
+                          <p><span class="font-medium">Vehículo:</span> {{ commerce.vehiclePlate }}</p>
+                          <p><span class="font-medium">Horas gratuitas:</span> {{ commerce.freeHours }}</p>
+                        </div>
+                      </div>
+                      <div class="space-y-1 text-sm">
+                        <p><span class="font-medium">Total a liquidar:</span> ${{ commerce.totalToSettleForCommerce.toFixed(2) }}</p>
+                        <p><span class="font-medium">Costo descuento:</span> ${{ commerce.discountCost.toFixed(2) }}</p>
+                        @if (commerce.benefitedClients.length > 0) {
+                          <p><span class="font-medium">Clientes beneficiados:</span></p>
+                          <div class="ml-4">
+                            @for (client of commerce.benefitedClients; track client) {
+                              <p class="text-xs">• {{ client }}</p>
+                            }
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Incidents Report Results -->
+        @if (incidentsReport().length > 0 && selectedReportType() === 'incidents') {
+          <div class="space-y-4">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-semibold text-gray-900 mb-3">Incidentes ({{ incidentsReport().length }})</h4>
+              <div class="space-y-3 max-h-96 overflow-y-auto">
+                @for (incident of incidentsReport(); track incident.id) {
+                  <div class="bg-white p-4 rounded border">
+                    <div class="flex justify-between items-start mb-3">
+                      <h5 class="font-medium text-gray-900">Incidente #{{ incident.id }}</h5>
+                      <span
+                        class="px-2 py-1 text-xs rounded-full"
+                        [class.bg-yellow-100]="incident.status === 'pending'"
+                        [class.text-yellow-800]="incident.status === 'pending'"
+                        [class.bg-green-100]="incident.status === 'resolved'"
+                        [class.text-green-800]="incident.status === 'resolved'"
+                        [class.bg-blue-100]="incident.status === 'in_progress'"
+                        [class.text-blue-800]="incident.status === 'in_progress'"
+                        [class.bg-gray-100]="incident.status === 'cancelled'"
+                        [class.text-gray-800]="incident.status === 'cancelled'"
+                      >
+                        {{ incident.status }}
+                      </span>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+                      <div class="space-y-1">
+                        <p><span class="font-medium">Notas:</span> {{ incident.notes || 'N/A' }}</p>
+                        <p><span class="font-medium">Usuario con suscripción:</span>
+                          <span [class.text-green-600]="incident.userHadSubscription" [class.text-red-600]="!incident.userHadSubscription">
+                            {{ incident.userHadSubscription ? 'Sí' : 'No' }}
+                          </span>
+                        </p>
+                      </div>
+                      <div class="space-y-1">
+                        <p><span class="font-medium">En grupo:</span>
+                          <span [class.text-green-600]="incident.isInGroup" [class.text-red-600]="!incident.isInGroup">
+                            {{ incident.isInGroup ? 'Sí' : 'No' }}
+                          </span>
+                        </p>
+                        @if (incident.urlEvidence) {
+                          <p><span class="font-medium">Evidencia:</span>
+                            <a [href]="incident.urlEvidence" target="_blank" class="text-blue-600 hover:underline">Ver evidencia</a>
+                          </p>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Empty State -->
+        @if (!occupationsReport() && !billingReport() && subscriptionReport().length === 0 && commerceBenefitsReport().length === 0 && incidentsReport().length === 0) {
+          <div class="text-center py-12">
+            <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No hay reportes generados</h3>
+            <p class="text-gray-600">Selecciona un tipo de reporte y completa los parámetros para generar un reporte.</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

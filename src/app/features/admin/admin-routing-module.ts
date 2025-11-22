@@ -19,7 +19,7 @@ const routes: Routes = [
       { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
       { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
+      { path: 'reportes', loadComponent: () => import('./reports/reports').then(c => c.Reports) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }
