@@ -23,9 +23,9 @@ const routes: Routes = [
         loadComponent: () => import('./fee/fee').then(c => c.Fee) 
       }, 
       { 
-        path: 'clientes', 
-        loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
-      }, // Placeholder
+        path: 'incidents', 
+        loadComponent: () => import('./incident/incident').then(c => c.Incident) 
+      },
       { 
         path: 'reportes', 
         loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
