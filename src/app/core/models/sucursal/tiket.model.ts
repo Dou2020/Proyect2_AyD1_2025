@@ -14,7 +14,7 @@ export interface SucursalModel {
   capacity4R: number;
   current2R: number;
   current4R: number;
-  appUser: AppUserModel;
+  appUser: AppUserModel | null;
 }
 
 export interface VehicleModel {
@@ -34,14 +34,14 @@ export interface DiscountModel {
 
 export interface TiketModel {
   id: number;
-  sucursal: SucursalModel;
-  vehicle: VehicleModel;
-  discount: DiscountModel;
-  createdAt: string;
+  sucursal: SucursalModel | null;
+  vehicle: VehicleModel | null;
+  discount: DiscountModel | null;
+  createdAt: string | null;
   endAt: string | null;
-  price: number;
-  realPrice: number;
-  discountType: string;
+  price: number | null;
+  realPrice: number | null;
+  discountType: string | null;
 }
 
 export interface TiketUpdateModel {

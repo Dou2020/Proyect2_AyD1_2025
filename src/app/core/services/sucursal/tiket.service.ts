@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../../enviroments/enviroments';
 import { TiketModel, TiketUpdateModel } from '../../models/sucursal/tiket.model';
 
@@ -32,24 +33,36 @@ export class TiketService {
     return this.http.get<TiketModel[]>(`${this.baseUrl}/ticket`);
   }
 
-  // Obtener tickets activos (sin endAt)
+  // Obtener tickets activos de la sucursal actual
   getActiveTickets(): Observable<TiketModel[]> {
-    return this.http.get<TiketModel[]>(`${this.baseUrl}/ticket/active`);
+    return this.getAllTickets().pipe(
+      map(tickets => tickets.filter(ticket => ticket.endAt == null))
+    );
   }
-
-  // Buscar tickets por placa del vehículo
-  searchTicketsByPlate(plate: string): Observable<TiketModel[]> {
-    return this.http.get<TiketModel[]>(`${this.baseUrl}/ticket/search`, {
-      params: { plate }
-    });
-  }
-
-  // Obtener historial de tickets
-  getTicketHistory(limit?: number): Observable<TiketModel[]> {
-    let url = `${this.baseUrl}/ticket/history`;
-    if (limit) {
-      url += `?limit=${limit}`;
+    searchTicketsByPlate(plate: string): Observable<TiketModel[]> {
+    const query = (plate || '').trim().toLowerCase();
+    if (!query) {
+      return this.getAllTickets();
     }
-    return this.http.get<TiketModel[]>(url);
+
+    return this.getAllTickets().pipe(
+      map(tickets =>
+        tickets.filter(ticket => {
+          const vehicle = (ticket as any).vehicle || {};
+          const plateValue = (
+            vehicle.plate ||
+            vehicle.placa ||
+            vehicle.licensePlate ||
+            vehicle.licencePlate ||
+            ''
+          ).toString().toLowerCase();
+          return plateValue.includes(query);
+        })
+      )
+    );
+  }
+  // Obtener historial de tickets (sin recibir identificador)
+  getTicketHistory(): Observable<TiketModel[]> {
+    return this.getAllTickets();
   }
 }

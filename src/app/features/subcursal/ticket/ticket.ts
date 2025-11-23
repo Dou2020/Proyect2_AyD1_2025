@@ -186,14 +186,14 @@ export class Ticket implements OnInit {
   closeEndModal() {
     this.showEndModal.set(false);
     this.selectedTicket.set(null);
-  }
-
-  // Utilidades
-  formatDate(date: string): string {
+  }  // Utilidades
+  formatDate(date: string | null): string {
+    if (!date) return 'N/A';
     return new Date(date).toLocaleString();
   }
 
-  calculateDuration(createdAt: string, endAt: string | null): string {
+  calculateDuration(createdAt: string | null, endAt: string | null): string {
+    if (!createdAt) return 'N/A';
     if (!endAt) return 'Activo';
 
     const start = new Date(createdAt);
@@ -211,5 +211,22 @@ export class Ticket implements OnInit {
 
   getStatusText(ticket: TiketModel): string {
     return ticket.endAt ? 'Finalizado' : 'Activo';
+  }
+
+  // Métodos de ayuda para verificar valores null
+  getVehiclePlate(ticket: TiketModel): string {
+    return ticket.vehicle?.plate || 'N/A';
+  }
+
+  getVehicleColor(ticket: TiketModel): string {
+    return ticket.vehicle?.color || 'N/A';
+  }
+
+  getVehicleType(ticket: TiketModel): string {
+    return ticket.vehicle?.type || 'N/A';
+  }
+
+  getPrice(ticket: TiketModel): string {
+    return ticket.price !== null ? ticket.price.toFixed(2) : '0.00';
   }
 }
