@@ -10,13 +10,31 @@ const routes: Routes = [
     component: SubcursalLayoutComponent,
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
-      { path: 'tickets', loadComponent: () => import('./ticket/ticket').then(c => c.Ticket) },
-      { path: 'incidencias', loadComponent: () => import('./incident/incident').then(c => c.Incident) },
-      { path: 'servicios', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: 'clientes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+      { 
+        path: 'dashboard', 
+        loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
+      },
+      { 
+        path: 'tickets', 
+        loadComponent: () => import('./ticket/ticket').then(c => c.Ticket) 
+      },
+      { 
+        path: 'fee', 
+        loadComponent: () => import('./fee/fee').then(c => c.Fee) 
+      }, 
+      { 
+        path: 'clientes', 
+        loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
+      }, // Placeholder
+      { 
+        path: 'reportes', 
+        loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
+      }, // Placeholder
+      { 
+        path: '', 
+        redirectTo: 'dashboard', 
+        pathMatch: 'full' 
+      }
     ]
   }
 ];

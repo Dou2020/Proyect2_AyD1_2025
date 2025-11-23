@@ -37,9 +37,14 @@ export class Sidebar {
       icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>'
     },
     {
-      name: 'Incidencias',
-      url: '/subcursal/incidencias',
-      icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />'
+      name: 'Tarifas',
+      url: '/subcursal/fee',
+      icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h.008v.008H7.5V7.5zm3.75 0h.008v.008h-.008V7.5zm3.75 0h.008v.008h-.008V7.5z" /><path stroke-linecap="round" stroke-linejoin="round" d="M3 6a3 3 0 013-3h8.586a2 2 0 011.414.586l3.414 3.414A2 2 0 0120 8.414V17a3 3 0 01-3 3H6a3 3 0 01-3-3V6z" />'
+    },
+    {
+      name: 'Clientes',
+      url: '/subcursal/clientes',
+      icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-4.663v-.005A9.345 9.345 0 0112 12c-3.057 0-5.764.98-7.922 2.625" />'
     },
     {
       name: 'Reportes',
@@ -48,7 +53,7 @@ export class Sidebar {
     },
   ];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   get user(): AppUser {
     return this.authService.getUserData() as AppUser;
