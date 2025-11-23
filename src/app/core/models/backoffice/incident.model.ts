@@ -10,3 +10,10 @@ export interface IncidentModel {
 export interface IncidentUpdateModel {
   status: 'REPORTED' | 'RESOLVED';
 }
+
+export interface IncidentCreateModel {
+  ticketId: number;
+  notes: string;
+  status: 'REPORTED' | 'RESOLVED';
+  isInGroup: boolean;
+}

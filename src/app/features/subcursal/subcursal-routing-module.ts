@@ -12,6 +12,7 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
       { path: 'tickets', loadComponent: () => import('./ticket/ticket').then(c => c.Ticket) },
+      { path: 'incidencias', loadComponent: () => import('./incident/incident').then(c => c.Incident) },
       { path: 'servicios', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'clientes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder

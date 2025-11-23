@@ -98,7 +98,9 @@ export class Incident implements OnInit {
     if (fileInput) {
       fileInput.value = '';
     }
-  }  createIncident() {
+  }
+
+  createIncident() {
     if (this.createIncidentForm.valid) {
       this.isCreating.set(true);
       this.error.set(null);

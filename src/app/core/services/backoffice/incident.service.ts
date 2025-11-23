@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviroments/enviroments';
-import { IncidentModel, IncidentUpdateModel } from '../../models/backoffice/incident.model';
+import { IncidentModel, IncidentUpdateModel, IncidentCreateModel } from '../../models/backoffice/incident.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +33,20 @@ export class IncidentService {
     return this.http.put<IncidentModel>(`${this.baseUrl}/incident/${incidentID}`, updateData);
   }
 
-  // Crear una nueva incidencia
-  createIncident(incidentData: Partial<IncidentModel>): Observable<IncidentModel> {
-    return this.http.post<IncidentModel>(`${this.baseUrl}/incident`, incidentData);
+  // Crear una nueva incidencia (siempre envía multipart/form-data)
+  createIncident(incidentData: Partial<IncidentCreateModel>, file?: File): Observable<IncidentModel> {
+    const formData = new FormData();
+
+    // Siempre añadir la parte 'data' como JSON string
+    formData.append('data', new Blob([JSON.stringify(incidentData || {})], { type: 'application/json' }));
+
+    // Añadir archivo solo si se proporciona
+    if (file) {
+      formData.append('file', file, file.name);
+    }
+
+    // El navegador establecerá automáticamente el Content-Type correcto para multipart/form-data
+    return this.http.post<IncidentModel>(`${this.baseUrl}/incident`, formData);
   }
 
 }
