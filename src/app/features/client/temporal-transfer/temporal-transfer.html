@@ -1,0 +1,153 @@
+<section class="space-y-8">
+    <!-- SECCIÓN DEL FORMULARIO         -->
+    <section class="bg-white rounded-lg shadow p-6">
+
+        <button class="flex justify-between items-center w-full text-left" (click)="isFormOpen = !isFormOpen">
+            <h2 class="text-xl font-semibold">Crear transferencia temporal</h2>
+
+            <span class="text-gray-600">
+                @if (isFormOpen) { ▲ } @else { ▼ }
+            </span>
+        </button>
+
+        @if (isFormOpen) {
+        <form class="mt-6 space-y-4" (ngSubmit)="submitTemporalTransfer()">
+
+            <div>
+                <label class="font-semibold block mb-1">Razón *</label>
+                <select class="w-full border border-gray-300 px-3 py-2 rounded" [(ngModel)]="formData.reason"
+                    name="reason" required>
+                    <option [ngValue]="null" disabled selected>Selecciona una razón</option>
+
+                    @for (r of reasons; track r) {
+                    <option [value]="r.value">{{ r.label }}</option>
+                    }
+                </select>
+            </div>
+
+            <div>
+                <label class="font-semibold block mb-1">Justificación *</label>
+                <textarea class="w-full border border-gray-300 px-3 py-2 rounded" [(ngModel)]="formData.justification"
+                    name="justification" required minlength="1"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="font-semibold block mb-1">Válido desde *</label>
+                    <input type="datetime-local" class="w-full border border-gray-300 px-3 py-2 rounded"
+                        [(ngModel)]="formData.validFrom" name="validFrom" required>
+                </div>
+
+                <div>
+                    <label class="font-semibold block mb-1">Válido hasta *</label>
+                    <input type="datetime-local" class="w-full border border-gray-300 px-3 py-2 rounded"
+                        [(ngModel)]="formData.validUntil" name="validUntil" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="font-semibold block mb-1">Vehículo original *</label>
+
+                    <select class="w-full border border-gray-200 px-3 py-2 rounded text-slate-800 font-medium bg-white"
+                        [(ngModel)]="formData.originalVehicleId" name="originalVehicleId" required>
+                        <option value="" disabled selected class="text-slate-500">
+                            Selecciona un vehículo
+                        </option>
+
+                        @for (v of ownedVehicles; track v.id) {
+                        <option [value]="v.id" class="text-slate-900">
+                            {{ v.vehicle.plate }}
+                        </option>
+                        }
+                    </select>
+
+                </div>
+
+                <div>
+                    <label class="font-semibold block mb-1">Segundo vehículo *</label>
+
+                    <select class="w-full border border-gray-200 px-3 py-2 rounded text-slate-800 font-medium bg-white"
+                        [(ngModel)]="formData.secondVehicleId" name="secondVehicleId" required>
+                        <option value="" disabled selected class="text-slate-500">
+                            Selecciona un vehículo
+                        </option>
+
+                        @for (v of ownedVehicles; track v.id) {
+                        <option [value]="v.id" class="text-slate-900">
+                            {{ v.vehicle.plate }}
+                        </option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="font-semibold block mb-2">Evidencia*</label>
+
+                <div
+                    class="border border-gray-300 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition cursor-pointer">
+                    <input type="file" required class="w-full text-gray-700" (change)="handleFile($event)">
+                </div>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Sube un archivo como evidencia del motivo de transferencia.
+                </p>
+            </div>
+
+            <button type="submit"
+                class="w-full mt-4 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">
+                Enviar transferencia
+            </button>
+
+        </form>
+        }
+    </section>
+
+    <!-- SECCIÓN DE CARDS -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        @if (transfers.length === 0) {
+        <p class="text-gray-500 col-span-full text-center">No tienes transferencias temporales registradas.</p>
+        }
+
+        @for (t of transfers; track t.id) {
+        <div class="bg-white border border-gray-300 rounded-lg p-4 shadow-sm">
+
+            <h3 class="font-semibold text-lg mb-2">Transferencia #{{ t.id }}</h3>
+
+            <p class="text-sm text-gray-600 mb-2">
+                <strong>Estado:</strong> {{ t.status }}
+            </p>
+
+            <p class="text-sm mb-2">
+                <strong>Vehículo original:</strong> {{ t.originalVehicle.plate }} ({{ t.originalVehicle.type }})
+            </p>
+
+            <p class="text-sm mb-2">
+                <strong>Segundo vehículo:</strong> {{ t.secondVehicle.plate }} ({{ t.secondVehicle.type }})
+            </p>
+
+            <p class="text-sm mb-2">
+                <strong>Razón:</strong> {{ t.reason }}
+            </p>
+
+            <p class="text-sm mb-2">
+                <strong>Justificación:</strong> {{ t.justification }}
+            </p>
+
+            <p class="text-sm mb-2">
+                <strong>Válido:</strong> {{ t.validFrom }} → {{ t.validUntil }}
+            </p>
+
+            @if (t.evidenceUrl) {
+            <a [href]="t.evidenceUrl" target="_blank" class="text-blue-600 underline text-sm">
+                Ver evidencia
+            </a>
+            }
+        </div>
+        }
+    </section>
+
+</section>

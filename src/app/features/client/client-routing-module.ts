@@ -29,6 +29,10 @@ const routes: Routes = [
         loadComponent: () => import('./facturation/facturation').then(c => c.Facturation) 
       },
       { 
+        path: 'transfers', 
+        loadComponent: () => import('./temporal-transfer/temporal-transfer').then(c => c.TemporalTransfer) 
+      },
+      { 
         path: '', 
         redirectTo: 'dashboard', pathMatch: 'full' 
       }
