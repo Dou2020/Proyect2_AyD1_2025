@@ -1,23 +1,30 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CommerceService } from '../../../core/services/commerce/commerce.service';
+import { CommerceService as AdminCommerceService } from '../../../core/services/admin/commerce.service';
 import { Auth as AuthService } from '../../../core/auth/auth';
-import { AffiliateSubcursalModel } from '../../../core/models/admin/commerce.model';
+import { AffiliateSubcursalModel, CommerceAffiliateCreateModel } from '../../../core/models/admin/commerce.model';
 import { SubcursalModel } from '../../../core/models/admin/subcursal.model';
 
 @Component({
   selector: 'app-subcursal',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './subcursal.html',
   styleUrl: './subcursal.css'
 })
 export class Subcursal implements OnInit {
   private commerceService = inject(CommerceService);
+  private adminCommerceService = inject(AdminCommerceService);
   private authService = inject(AuthService);
 
   subcursales = signal<AffiliateSubcursalModel[]>([]);
+  availableSubcursals = signal<any[]>([]);
   loading = signal(false);
+  loadingAffiliate = signal(false);
   error = signal<string | null>(null);
+  showAffiliateModal = signal(false);
+  selectedSubcursalId = signal<number | null>(null);
 
   ngOnInit() {
     this.loadSubcursales();
@@ -131,5 +138,70 @@ export class Subcursal implements OnInit {
 
   getTotalSubcursales(): number {
     return this.subcursales().length;
+  }
+
+  // Métodos para manejar la afiliación de subcursales
+  openAffiliateModal() {
+    const user = this.authService.getUserData();
+    if (!user?.id) {
+      this.error.set('No se pudo obtener la información del usuario');
+      return;
+    }
+
+    this.showAffiliateModal.set(true);
+    this.loadAvailableSubcursals(user.id);
+  }
+
+  closeAffiliateModal() {
+    this.showAffiliateModal.set(false);
+    this.selectedSubcursalId.set(null);
+    this.availableSubcursals.set([]);
+  }
+
+  loadAvailableSubcursals(commerceId: number) {
+    this.loading.set(true);
+    this.adminCommerceService.getSubcursalsNotAffiliated(commerceId).subscribe({
+      next: (subcursals) => {
+        this.availableSubcursals.set(subcursals);
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading available subcursals:', error);
+        this.error.set('Error al cargar las subcursales disponibles');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  affiliateSubcursal() {
+    const user = this.authService.getUserData();
+    const subcursalId = this.selectedSubcursalId();
+
+    if (!user?.id || !subcursalId) {
+      this.error.set('Datos incompletos para la afiliación');
+      return;
+    }
+
+    const payload: CommerceAffiliateCreateModel = {
+      commerceId: user.id,
+      sucursalId: subcursalId
+    };
+
+    this.loadingAffiliate.set(true);
+    this.error.set(null);
+
+    this.adminCommerceService.affiliateCommerceToSubcursal(payload).subscribe({
+      next: (response) => {
+        console.log('Afiliación exitosa:', response);
+        this.loadingAffiliate.set(false);
+        this.closeAffiliateModal();
+        this.loadSubcursales(); // Recargar la lista
+      },
+      error: (error) => {
+        console.error('Error en la afiliación:', error);
+        this.error.set('Error al afiliar la subcursal');
+        this.loadingAffiliate.set(false);
+      }
+    });
   }
 }

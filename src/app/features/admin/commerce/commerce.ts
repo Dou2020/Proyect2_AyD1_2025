@@ -1,27 +1,34 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SubcursalService } from '../../../core/services/subcursal.service';
-import { AffiliateCommerceModel } from '../../../core/models/admin/commerce.model';
+import { CommerceService } from '../../../core/services/admin/commerce.service';
+import { AffiliateCommerceModel, CommerceModel, CommerceAffiliateCreateModel } from '../../../core/models/admin/commerce.model';
 
 @Component({
   selector: 'app-commerce',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './commerce.html',
   styleUrl: './commerce.css'
 })
 export class Commerce implements OnInit {
   affiliatedCommerces = signal<AffiliateCommerceModel[]>([]);
   filteredCommerces = signal<AffiliateCommerceModel[]>([]);
+  availableCommerces = signal<CommerceModel[]>([]);
   searchTerm = signal('');
   isLoading = signal(false);
+  loadingAffiliate = signal(false);
   subcursalId = signal<number | null>(null);
   errorMessage = signal<string>('');
+  showAffiliateModal = signal(false);
+  selectedCommerceId = signal<number | null>(null);
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private subcursalService: SubcursalService
+    private subcursalService: SubcursalService,
+    private commerceService: CommerceService
   ) {}
 
   // Computed property for filtered commerces
@@ -108,5 +115,74 @@ export class Commerce implements OnInit {
       default:
         return status || 'Desconocido';
     }
+  }
+
+  // Métodos para manejar la afiliación de comercios
+  openAffiliateModal() {
+    const subcursalId = this.subcursalId();
+    if (!subcursalId) {
+      this.errorMessage.set('No se pudo obtener el ID de la subcursal');
+      this.clearErrorAfterDelay();
+      return;
+    }
+
+    this.showAffiliateModal.set(true);
+    this.loadAvailableCommerces(subcursalId);
+  }
+
+  closeAffiliateModal() {
+    this.showAffiliateModal.set(false);
+    this.selectedCommerceId.set(null);
+    this.availableCommerces.set([]);
+  }
+
+  loadAvailableCommerces(subcursalId: number) {
+    this.isLoading.set(true);
+    this.commerceService.getCommerceAll(subcursalId).subscribe({
+      next: (commerces) => {
+        this.availableCommerces.set(commerces);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading available commerces:', error);
+        this.errorMessage.set('Error al cargar los comercios disponibles');
+        this.isLoading.set(false);
+        this.clearErrorAfterDelay();
+      }
+    });
+  }
+
+  affiliateCommerce() {
+    const subcursalId = this.subcursalId();
+    const commerceId = this.selectedCommerceId();
+
+    if (!subcursalId || !commerceId) {
+      this.errorMessage.set('Datos incompletos para la afiliación');
+      this.clearErrorAfterDelay();
+      return;
+    }
+
+    const payload: CommerceAffiliateCreateModel = {
+      commerceId: commerceId,
+      sucursalId: subcursalId
+    };
+
+    this.loadingAffiliate.set(true);
+    this.errorMessage.set('');
+
+    this.commerceService.affiliateCommerceToSubcursal(payload).subscribe({
+      next: (response) => {
+        console.log('Afiliación exitosa:', response);
+        this.loadingAffiliate.set(false);
+        this.closeAffiliateModal();
+        this.loadAffiliatedCommerces(subcursalId); // Recargar la lista
+      },
+      error: (error) => {
+        console.error('Error en la afiliación:', error);
+        this.errorMessage.set('Error al afiliar el comercio');
+        this.loadingAffiliate.set(false);
+        this.clearErrorAfterDelay();
+      }
+    });
   }
 }

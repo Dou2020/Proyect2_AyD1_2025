@@ -21,7 +21,7 @@ export interface CommerceCreateModel {
 
 export interface CommerceAffiliateCreateModel {
   commerceId: number;
-  subcursalId: number;
+  sucursalId: number;
 }
 
 export interface AffiliateCommerceModel {
