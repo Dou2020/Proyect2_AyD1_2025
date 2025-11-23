@@ -52,4 +52,11 @@ export class TiketService {
     }
     return this.http.get<TiketModel[]>(url);
   }
+
+  /**
+   * Obtiene el listado de tickets relacionados a un vehiculo
+   * */ 
+  getFacturation(vehicleId: Number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/ticket/vehicle/${vehicleId}`);
+  }
 }

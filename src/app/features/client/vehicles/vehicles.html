@@ -56,3 +56,62 @@
     </div>
 
 </section>
+
+
+<!-- Modal -->
+@if (showModal) {
+<section class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+  <section class="bg-white rounded-xl p-6 w-full max-w-md shadow-lg">
+
+    <h2 class="text-xl font-bold mb-4 text-slate-800">
+      Información de la suscripción
+    </h2>
+
+    <section class="space-y-4">
+
+      <section>
+        <span class="font-semibold">Válido hasta:</span>
+        <p>{{ subscription?.validUntil || 'Pendiente' }}</p>
+      </section>
+
+      <section>
+        <span class="font-semibold">Horas actuales:</span>
+        <p>{{ subscription.currentHours ?? 'Pendiente' }}</p>
+      </section>
+
+      <section>
+        <span class="font-semibold">Horas gratis por mes:</span>
+        <p>{{ subscription.freeHoursPerMonth ?? 'Pendiente' }}</p>
+      </section>
+
+      <section>
+        <span class="font-semibold">Descuento base:</span>
+        <p>{{ subscription.baseDiscount ?? 'Pendiente' }}</p>
+      </section>
+
+      <section>
+        <span class="font-semibold">Descuento anual:</span>
+        <p>{{ subscription.yearDiscount ?? 'Pendiente' }}</p>
+      </section>
+
+      <section>
+        <span class="font-semibold">Notas:</span>
+        <p>{{ subscription.notes || 'Sin notas' }}</p>
+      </section>
+
+    </section>
+
+    <section class="mt-6 text-right">
+      <button
+        class="px-4 py-2 bg-blue-600 text-white rounded-md"
+        (click)="showModal = false"
+      >
+        Cerrar
+      </button>
+    </section>
+
+  </section>
+
+</section>
+}

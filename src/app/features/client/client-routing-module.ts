@@ -25,7 +25,7 @@ const routes: Routes = [
         loadComponent: () => import('./link-vehicles/link-vehicles').then(c => c.LinkVehicles) 
       },
       { 
-        path: 'vehicles/facturation', 
+        path: 'vehicles/facturation/:vehicleId', 
         loadComponent: () => import('./facturation/facturation').then(c => c.Facturation) 
       },
       { 
