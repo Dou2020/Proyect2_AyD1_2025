@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../enviroments/enviroments';
 import { TemporalTransferModel } from '../../models/backoffice/temporalTransfer.model';
@@ -38,5 +38,17 @@ export class TemporalTransferService {
     return this.http.delete<TemporalTransferModel>(`${this.baseUrl}/temporalTransfer/ban/${temporalTransferID}`, {});
   }
 
+  //crear una transferencia temporal
+  create(data: any): Observable<any>{
+    return this.http.post<any>(`${this.baseUrl}/temporalTransfer`, data);
+  }
+
+  findByUser(originalUserId: any, secondUserId: any) {
+    const params = new HttpParams()
+      .set('originalUserId', originalUserId)
+      .set('secondUserId', secondUserId);
+
+    return this.http.get<any>(`${this.baseUrl}/temporalTransfer`, { params });
+  }
 
 }

@@ -1,1 +1,77 @@
-<p>facturation works!</p>
+<section class="p-6">
+
+    <h2 class="text-2xl font-bold mb-4">Historial de facturación</h2>
+
+    <!-- Si no hay tickets -->
+    @if (tickets.length === 0) {
+    <p class="text-gray-500">Este vehículo no tiene facturación registrada.</p>
+    }
+
+    <!-- Lista de tickets -->
+    @for (t of tickets; track t.id) {
+    <div class="border border-gray-300 rounded-lg p-4 mb-4 shadow-sm bg-white">
+
+        <!-- Sucursal -->
+        <div class="flex justify-between mb-2">
+            <h3 class="font-semibold text-lg">{{ t.sucursal.address }}</h3>
+            <span class="text-sm text-gray-500">
+                {{ t.sucursal.initHour }} – {{ t.sucursal.endHour }}
+            </span>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Fechas -->
+        <div class="grid grid-cols-2 gap-4 text-sm">
+
+            <div>
+                <span class="font-semibold">Entrada:</span>
+                <p>{{ t.createdAt | date:'yyyy-MM-dd HH:mm' }}</p>
+            </div>
+
+            <div>
+                <span class="font-semibold">Salida:</span>
+                <p>{{ t.endAt ? (t.endAt | date:'yyyy-MM-dd HH:mm') : '--pendiente--' }}</p>
+            </div>
+
+            <div>
+                <span class="font-semibold">Precio total:</span>
+                <p>Q {{ t.price != null ? t.price : '--pendiente--' }}</p>
+            </div>
+
+            <div>
+                <span class="font-semibold">Precio final:</span>
+                <p class="text-green-700 font-semibold">
+                    Q {{ t.realPrice != null ? t.realPrice : '--pendiente--' }}
+                </p>
+
+            </div>
+
+            <div>
+                <span class="font-semibold">Tipo de descuento:</span>
+                <p>{{ t.discountType ? t.discountType : 'NINGUNO' }}</p>
+            </div>
+
+            @if (t.discount) {
+            <div>
+                <span class="font-semibold">Horas de descuento:</span>
+                <p>{{ t.discount.hours }}</p>
+            </div>
+            }
+
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Datos del vehículo -->
+        <div class="text-sm">
+            <span class="font-semibold">Vehículo:</span>
+            <p>
+                {{ t.vehicle.plate }} —
+                {{ t.vehicle.color }} ({{ t.vehicle.type }})
+            </p>
+        </div>
+
+    </div>
+    }
+</section>
