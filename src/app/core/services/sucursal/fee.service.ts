@@ -14,8 +14,8 @@ export class FeeService {
   /**
    * Crea una tarifa
    */
-  createSpecificFee(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/specificFee`, data);
+  createSpecificFee(data: any, sucursalId: Number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/sucursal/${sucursalId}/fees`, data);
   }
 
   /**
@@ -28,15 +28,19 @@ export class FeeService {
   /**
    * Modifica el listado completo, sobreescribe
    */
-  modifyAll(data: any, sucursalId:Number): Observable<any>{
+  modifyAll(data: any, sucursalId: Number): Observable<any>{
     return this.http.put<any>(`${this.baseUrl}/sucursal/${sucursalId}/fees`, data);
   }
 
   /**
    * Elimina una tarifa de la sucursal logueada
    */
-  deleteFee(feeId:Number){
-    return this.http.delete<any>(`${this.baseUrl}/specificFee/${feeId}`);
+  deleteFee(feeId:Number, sucursalId: Number){
+    return this.http.delete<any>(`${this.baseUrl}/sucursal/${sucursalId}/fees/${feeId}`);
+  }
+
+  edit(data: any, sucursalId:Number, feeId:Number): Observable<any>{
+    return this.http.put<any>(`${this.baseUrl}/sucursal/${sucursalId}/fees/${feeId}`, data)
   }
 
 

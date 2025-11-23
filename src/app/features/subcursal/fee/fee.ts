@@ -30,13 +30,13 @@ export class Fee implements OnInit {
   newSchedule = {
     initHour: '',
     endHour: '',
-    price: 0,
-    sucursalId: 0
+    price: 0
   };
 
   editSchedule: any = {};
 
   sucursalId = 0;
+  private feeId:Number = 0;
 
   constructor(
     private feeService: FeeService,
@@ -56,7 +56,6 @@ export class Fee implements OnInit {
     this.feeService.getFees(this.sucursalId).subscribe({
       next: (data) => {
         this.schedules = data ?? [];
-        console.log(data);
       },
       error: () => alert('Error al cargar los horarios')
     });
@@ -65,8 +64,13 @@ export class Fee implements OnInit {
   createSchedule() {
 
     if (this.createMode === 'overwrite') {
-      // Sobrescribir todo
-      const payload = [this.newSchedule];
+      const payload = [
+        {
+          initHour: this.newSchedule.initHour,
+          endHour: this.newSchedule.endHour,
+          price: this.newSchedule.price
+        }
+      ];
 
       this.feeService.modifyAll(payload, this.sucursalId).subscribe({
         next: () => {
@@ -74,18 +78,16 @@ export class Fee implements OnInit {
           this.loadSchedules();
           this.resetCreateForm();
         },
-        error: () => alert('Error al sobrescribir los horarios')
+        error: (err) => alert(err.error.message ?? "Error al sobreescribir")
       });
 
     } else {
-      // Agregar
       const payload = {
         initHour: this.newSchedule.initHour,
         endHour: this.newSchedule.endHour,
         price: this.newSchedule.price
       };
-
-      this.feeService.createSpecificFee(payload).subscribe({
+      this.feeService.createSpecificFee(payload, this.sucursalId).subscribe({
         next: () => {
           alert('Horario creado correctamente');
           this.loadSchedules();
@@ -100,15 +102,19 @@ export class Fee implements OnInit {
     this.newSchedule = {
       initHour: '',
       endHour: '',
-      price: 0,
-      sucursalId: this.sucursalId
+      price: 0
     };
     this.showCreate = false;
   }
 
   openEditModal(schedule: any) {
-    this.editSchedule = { ...schedule }; // copia
+    this.editSchedule = {
+      initHour: schedule.initHour,
+      endHour: schedule.endHour,
+      price: schedule.price
+    };
     this.showEditModal = true;
+    this.feeId = Number(schedule.id);
   }
 
   closeEditModal() {
@@ -116,9 +122,8 @@ export class Fee implements OnInit {
   }
 
   updateSchedule() {
-    const payload = [this.editSchedule];
-
-    this.feeService.modifyAll(payload, this.sucursalId).subscribe({
+    
+    this.feeService.edit(this.editSchedule, this.sucursalId, this.feeId).subscribe({
       next: () => {
         alert('Horario actualizado');
         this.loadSchedules();
@@ -131,7 +136,7 @@ export class Fee implements OnInit {
   deleteSchedule(id: number) {
     if (!confirm('¿Seguro que deseas eliminar este horario?')) return;
 
-    this.feeService.deleteFee(id).subscribe({
+    this.feeService.deleteFee(id, this.sucursalId).subscribe({
       next: () => {
         alert('Horario eliminado');
         this.loadSchedules();
