@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FeeService } from '../../../core/services/sucursal/fee.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Auth as AuthService } from '../../../core/auth/auth';
 import { sucursalService } from '../../../core/services/sucursal/sucursal.service';
 
 @Component({
@@ -16,9 +15,6 @@ import { sucursalService } from '../../../core/services/sucursal/sucursal.servic
   styleUrl: './fee.css'
 })
 export class Fee implements OnInit {
-
-  /*private authService = inject(AuthService);
-  private userId = this.authService.getUserData()?.id;*/
 
   schedules: any[] = [];
 

@@ -1,8 +1,8 @@
 <div class="min-h-screen bg-gray-50 p-4">
   <!-- Header -->
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Subcursales</h1>
-    <p class="text-gray-600">Administra las subcursales del sistema</p>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestión de Sucursales</h1>
+    <p class="text-gray-600">Administra las sucursales del sistema</p>
   </div>
 
   <!-- Success Message -->
@@ -29,7 +29,7 @@
         <div class="relative">
           <input
             type="text"
-            placeholder="Buscar subcursales..."
+            placeholder="Buscar sucursales..."
             (input)="onSearch($event)"
             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
@@ -47,7 +47,7 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        Nueva Subcursal
+        Nueva Sucursal
       </button>
     </div>
   </div>
@@ -55,7 +55,7 @@
   <!-- Loading State -->
   <div *ngIf="isLoading() && subcursals().length === 0" class="text-center py-12">
     <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    <p class="mt-2 text-gray-600">Cargando subcursales...</p>
+    <p class="mt-2 text-gray-600">Cargando sucursales...</p>
   </div>
 
   <!-- Subcursals Grid -->
@@ -94,7 +94,7 @@
             <button
               (click)="openModal(subcursal)"
               class="text-white hover:text-blue-100 p-1 rounded-md hover:bg-blue-500/20 transition-colors duration-200"
-              title="Editar subcursal"
+              title="Editar sucursal"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -103,7 +103,7 @@
             <button
               (click)="deleteSubcursal(subcursal)"
               class="text-white hover:text-red-200 p-1 rounded-md hover:bg-red-500/20 transition-colors duration-200"
-              title="Eliminar subcursal"
+              title="Eliminar sucursal"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -195,9 +195,9 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
         </svg>
       </div>
-      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay subcursales</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay sucursales</h3>
       <p class="text-gray-500 mb-6 max-w-md">
-        No se encontraron subcursales. Comienza creando una nueva subcursal.
+        No se encontraron sucursales. Comienza creando una nueva sucursal.
       </p>
       <button
         (click)="openModal()"
@@ -206,7 +206,7 @@
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
-        Crear Primera Subcursal
+        Crear Primera Sucursal
       </button>
     </div>
   </div>
@@ -239,7 +239,7 @@
               <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
               </svg>
-              Información de la Subcursal
+              Información de la Sucursal
             </h4>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

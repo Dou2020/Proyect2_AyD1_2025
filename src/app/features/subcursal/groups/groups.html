@@ -1,0 +1,39 @@
+<section>
+    <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="px-4 py-2 text-left">#</th>
+                <th class="px-4 py-2 text-left">Descuento</th>
+                <th class="px-4 py-2 text-left">Desde</th>
+                <th class="px-4 py-2 text-left">Hasta</th>
+                <th class="px-4 py-2 text-left">Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (fleetDiscounts.length == 0) {
+            <tr>
+                <td colspan="5" class="text-center py-4 text-gray-500 italic">
+                    No hay descuentos de flotillas registrados para esta sucursal
+                </td>
+            </tr>
+            }
+
+            @for (d of fleetDiscounts; let i = $index; track d) {
+            <tr class="border-t">
+                <td class="px-4 py-2 font-medium">{{ i + 1 }}</td>
+                <td class="px-4 py-2">{{ d.discount * 100 }} %</td>
+                <td class="px-4 py-2">{{ d.from }}</td>
+                <td class="px-4 py-2">{{ d.to }}</td>
+
+                <td class="px-4 py-2">
+                    <button (click)="viewDetails(d)"
+                        class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                        Ver detalles
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</section>

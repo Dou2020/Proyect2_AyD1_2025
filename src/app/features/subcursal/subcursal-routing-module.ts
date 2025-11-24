@@ -27,9 +27,9 @@ const routes: Routes = [
         loadComponent: () => import('./incident/incident').then(c => c.Incident) 
       },
       { 
-        path: 'reportes', 
-        loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) 
-      }, // Placeholder
+        path: 'groups', 
+        loadComponent: () => import('./groups/groups').then(c => c.Groups) 
+      },
       { 
         path: '', 
         redirectTo: 'dashboard', 
