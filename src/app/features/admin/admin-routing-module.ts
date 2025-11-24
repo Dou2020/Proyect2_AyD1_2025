@@ -11,11 +11,13 @@ const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
+      { path: 'dashboard/sucursal/:sucursalId', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
       { path: 'usuarios', loadComponent: () => import('./users/users').then(c => c.Users) },
       { path: 'tarifas-base', loadComponent: () => import('./base-free/base-free').then(c => c.BaseFree) },
       { path: 'subcursales', loadComponent: () => import('./subcursal/subcursal').then(c => c.Subcursal) },
       { path: 'subcursales/:id/comercios', loadComponent: () => import('./commerce/commerce').then(c => c.Commerce) },
       { path: 'subcursales/:id/tarifas', loadComponent: () => import('./subcursal-fee/subcursal-fee').then(c => c.SubcursalFee) },
+      { path: 'subcursales/:id/dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
       { path: 'grupos', loadComponent: () => import('./group/group').then(c => c.Group) },
       { path: 'grupos/:groupId/tickets', loadComponent: () => import('./ticket-group/ticket-group').then(c => c.TicketGroup) },
       { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
