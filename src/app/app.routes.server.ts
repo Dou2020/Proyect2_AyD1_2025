@@ -22,6 +22,18 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
+    path: 'admin/dashboard/sucursal/:sucursalId',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/subcursales/:id/dashboard',
+    renderMode: RenderMode.Server
+  },
+  {
+    path: 'admin/liquidation-commerce/:commerceId',
+    renderMode: RenderMode.Server
+  },
+  {
     path: '**',
     renderMode: RenderMode.Prerender
   }
