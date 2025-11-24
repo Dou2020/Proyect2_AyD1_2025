@@ -68,6 +68,7 @@ export class TicketGroup implements OnInit {
     this.groupTicketService.getGroupTickets(groupId).subscribe({
       next: (tickets) => {
         this.groupTickets.set(tickets);
+        console.log(this.groupTickets);
         this.filteredTickets.set(this.computedFilteredTickets());
         this.isLoading.set(false);
       },
@@ -178,7 +179,8 @@ export class TicketGroup implements OnInit {
     return isAvailable ? 'Disponible' : 'No Disponible';
   }
 
-  getVehicleTypeClass(type: string): string {
+  getVehicleTypeClass(type: string | undefined): string {
+    if(type  == undefined) return "";
     switch (type.toLowerCase()) {
       case '2r':
       case 'motorcycle':
