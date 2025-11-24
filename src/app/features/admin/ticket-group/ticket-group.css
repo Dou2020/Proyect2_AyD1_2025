@@ -1,0 +1,215 @@
+/* Ticket Group specific styles */
+
+/* Card hover effects */
+.group-ticket-card {
+  transition: all 0.3s ease;
+}
+
+.group-ticket-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Status indicators with pulse effect */
+.status-indicator-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Gradient backgrounds */
+.ticket-header-gradient {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Form validation styles */
+.form-group input:focus {
+  border-color: #10b981;
+  ring-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-group input.error {
+  border-color: #ef4444;
+}
+
+/* Modal animations */
+.modal-backdrop {
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  animation: slideInFromTop 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Alert animations */
+.alert-enter {
+  animation: slideDownAlert 0.4s ease;
+}
+
+@keyframes slideDownAlert {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover effects */
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
+}
+
+/* Currency formatting */
+.currency {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+
+/* Vehicle type badges */
+.vehicle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.vehicle-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Pricing section styles */
+.pricing-section {
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Loading spinner with custom colors */
+.spinner-green {
+  border: 3px solid #d1fae5;
+  border-top: 3px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 768px) {
+  .group-ticket-card {
+    margin-bottom: 1rem;
+  }
+
+  .modal-content {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card section dividers */
+.card-divider {
+  border-bottom: 1px solid #f3f4f6;
+  margin: 0 -1.5rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Icon animations */
+.icon-bounce {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Status badges with better contrast */
+.status-available {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.status-unavailable {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Table-like layout for ticket info */
+.ticket-info-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.ticket-info-row:last-child {
+  border-bottom: none;
+  font-weight: 600;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid #e5e7eb;
+}

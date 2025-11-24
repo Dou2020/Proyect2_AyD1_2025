@@ -1,0 +1,334 @@
+<!-- Header Section -->
+<div class="bg-white shadow-sm border-b">
+  <div class="px-4 sm:px-6 lg:px-8 py-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-4 mb-4 sm:mb-0">
+        <button
+          (click)="goBack()"
+          class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          Volver a Grupos
+        </button>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Tickets del Grupo</h1>
+          <p class="mt-1 text-sm text-gray-600">Gestiona los tickets del grupo #{{ groupId() }}</p>
+        </div>
+        <button
+          (click)="openCreateModal()"
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Crear Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="flex-1 p-4 sm:p-6 lg:p-8 bg-gray-50 min-h-screen">
+  <!-- Success Message -->
+  <div *ngIf="success()" class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-3 alert-enter">
+    <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    {{ success() }}
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error()" class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3 alert-enter">
+    <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    {{ error() }}
+  </div>
+
+  <!-- Search Section -->
+  <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex-1 max-w-md">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar tickets..."
+            (input)="onSearch($event)"
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+          <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="text-sm text-gray-600">
+        <span class="font-medium">{{ computedFilteredTickets().length }}</span>
+        ticket{{ computedFilteredTickets().length === 1 ? '' : 's' }} encontrado{{ computedFilteredTickets().length === 1 ? '' : 's' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+  </div>
+
+  <!-- Tickets Grid -->
+  <div *ngIf="!isLoading()" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+    <!-- Ticket Cards -->
+    <div *ngFor="let groupTicket of computedFilteredTickets(); trackBy: trackByTicket"
+         class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 group-ticket-card">
+
+      <!-- Card Header -->
+      <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-gray-900 mb-1">Ticket #{{ groupTicket.ticket.id }}</h3>
+            <p class="text-sm text-gray-600">
+              Grupo #{{ groupTicket.groupId }}
+            </p>
+            <span [class]="'inline-flex px-2 py-1 text-xs font-medium rounded-full mt-2 ' + getAvailabilityClass(groupTicket.isAvailable)">
+              {{ getAvailabilityText(groupTicket.isAvailable) }}
+            </span>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-bold text-green-600">{{ groupTicket.quantity }}</div>
+            <div class="text-sm text-gray-500">Cantidad</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Body -->
+      <div class="px-6 py-4">
+        <!-- Vehicle Info -->
+        <div class="mb-4">
+          <div class="flex items-center text-sm text-gray-600 mb-2">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="font-medium">Vehículo:</span>
+          </div>
+          <div class="ml-6 space-y-1">
+            <p class="text-sm text-gray-900 font-medium">{{ groupTicket.ticket.vehicle.plate }}</p>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-gray-500">{{ groupTicket.ticket.vehicle.color }}</span>
+              <span [class]="'px-2 py-1 text-xs font-medium rounded-full ' + getVehicleTypeClass(groupTicket.ticket.vehicle.type)">
+                {{ groupTicket.ticket.vehicle.type }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sucursal Info -->
+        <div class="mb-4">
+          <div class="flex items-center text-sm text-gray-600 mb-2">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span class="font-medium">Sucursal:</span>
+          </div>
+          <p class="text-sm text-gray-700 ml-6">{{ groupTicket.ticket.sucursal.address }}</p>
+        </div>
+
+        <!-- Time Info -->
+        <div class="mb-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Inicio</p>
+              <p class="text-sm font-medium text-gray-900">{{ formatDate(groupTicket.ticket.createdAt) }}</p>
+            </div>
+            <div>
+              <p class="text-xs text-gray-500 mb-1">Fin</p>
+              <p class="text-sm font-medium text-gray-900">{{ formatDate(groupTicket.ticket.endAt) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pricing Info -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">Precio:</span>
+            <span class="font-medium text-gray-900">{{ formatCurrency(groupTicket.ticket.price) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">Precio Real:</span>
+            <span class="font-medium text-green-600">{{ formatCurrency(groupTicket.ticket.realPrice) }}</span>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-600">Costo Extra:</span>
+            <span class="font-medium text-orange-600">{{ formatCurrency(groupTicket.extraCost) }}</span>
+          </div>
+          <hr class="my-2">
+          <div class="flex items-center justify-between text-sm font-semibold">
+            <span class="text-gray-900">Total:</span>
+            <span class="text-lg text-green-600">{{ formatCurrency(groupTicket.ticket.realPrice + groupTicket.extraCost) }}</span>
+          </div>
+        </div>
+
+        <!-- Discount Info -->
+        <div *ngIf="groupTicket.ticket.discount" class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+          <div class="flex items-center text-sm text-yellow-800 mb-2">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a1.994 1.994 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+            </svg>
+            <span class="font-medium">Descuento Aplicado</span>
+          </div>
+          <p class="text-xs text-yellow-700 ml-6">{{ groupTicket.ticket.discountType }}</p>
+          <p class="text-xs text-yellow-700 ml-6">{{ groupTicket.ticket.discount.hours }} horas</p>
+        </div>
+      </div>
+
+      <!-- Card Footer -->
+      <div class="px-6 py-3 bg-gray-50 rounded-b-lg">
+        <div class="flex items-center justify-between">
+          <div class="text-xs text-gray-500">
+            ID: {{ groupTicket.id }}
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="w-2 h-2 rounded-full"
+                 [class]="groupTicket.isAvailable ? 'bg-green-400' : 'bg-red-400'"></div>
+            <span class="text-xs text-gray-500">
+              {{ groupTicket.isAvailable ? 'Disponible' : 'Ocupado' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="computedFilteredTickets().length === 0"
+         class="col-span-full flex flex-col items-center justify-center py-16 text-center">
+      <div class="bg-gray-100 rounded-full p-6 mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No hay tickets</h3>
+      <p class="text-gray-500 mb-6 max-w-md">
+        No se encontraron tickets para este grupo o no hay resultados para la búsqueda.
+      </p>
+      <button
+        (click)="openCreateModal()"
+        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Crear Primer Ticket
+      </button>
+    </div>
+  </div>
+
+  <!-- Summary Statistics -->
+  <div *ngIf="!isLoading() && computedFilteredTickets().length > 0"
+       class="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h3 class="text-lg font-medium text-gray-900 mb-4">Resumen del Grupo</h3>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="text-center p-4 bg-green-50 rounded-lg">
+        <div class="text-2xl font-bold text-green-600">{{ computedFilteredTickets().length }}</div>
+        <div class="text-sm text-green-800">Total Tickets</div>
+      </div>      <div class="text-center p-4 bg-blue-50 rounded-lg">
+        <div class="text-2xl font-bold text-blue-600">
+          {{ getAvailableTicketsCount() }}
+        </div>
+        <div class="text-sm text-blue-800">Disponibles</div>
+      </div>
+
+      <div class="text-center p-4 bg-orange-50 rounded-lg">
+        <div class="text-2xl font-bold text-orange-600">
+          {{ getOccupiedTicketsCount() }}
+        </div>
+        <div class="text-sm text-orange-800">Ocupados</div>
+      </div>
+
+      <div class="text-center p-4 bg-purple-50 rounded-lg">
+        <div class="text-2xl font-bold text-purple-600">
+          {{ getTotalQuantity() }}
+        </div>
+        <div class="text-sm text-purple-800">Cantidad Total</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Ticket Modal -->
+<div *ngIf="showCreateModal()"
+     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 modal-backdrop"
+     (click)="closeCreateModal()">
+  <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-lg rounded-md bg-white modal-content"
+       (click)="$event.stopPropagation()">
+
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between pb-3 border-b">
+      <h3 class="text-lg font-medium text-gray-900">Crear Nuevo Ticket</h3>
+      <button
+        (click)="closeCreateModal()"
+        class="text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="mt-4">
+      <form [formGroup]="ticketForm" (ngSubmit)="createGroupTicket()">
+        <div class="mb-4">
+          <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
+            Cantidad *
+          </label>
+          <input
+            type="number"
+            id="quantity"
+            formControlName="quantity"
+            min="1"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
+            [class.border-red-500]="ticketForm.get('quantity')?.invalid && ticketForm.get('quantity')?.touched"
+            placeholder="Ej: 5">
+          <div *ngIf="ticketForm.get('quantity')?.invalid && ticketForm.get('quantity')?.touched"
+               class="mt-1 text-sm text-red-600">
+            <span *ngIf="ticketForm.get('quantity')?.errors?.['required']">Cantidad es requerida</span>
+            <span *ngIf="ticketForm.get('quantity')?.errors?.['min']">La cantidad debe ser mayor a 0</span>
+          </div>
+        </div>
+
+        <!-- Error Message in Modal -->
+        <div *ngIf="error()" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-red-700">{{ error() }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="flex items-center justify-end pt-4 border-t space-x-3">
+          <button
+            type="button"
+            (click)="closeCreateModal()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="ticketForm.invalid || loadingCreate()"
+            class="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="loadingCreate()" class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Creando...
+            </span>
+            <span *ngIf="!loadingCreate()">Crear Ticket</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
