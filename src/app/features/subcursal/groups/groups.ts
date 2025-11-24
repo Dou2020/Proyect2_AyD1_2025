@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GroupService } from '../../../core/services/sucursal/groups.service';
-import { ticketGroupService } from '../../../core/services/sucursal/ticketGroup.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-groups',
@@ -13,7 +13,8 @@ export class Groups implements OnInit {
   fleetDiscounts: any[] = [];
 
   constructor(
-    private groupService: GroupService
+    private groupService: GroupService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -23,9 +24,8 @@ export class Groups implements OnInit {
     })
   }
 
-  viewDetails(item: any) {
-    console.log('Detalles del descuento:', item);
-    // aquí puedes abrir un modal o navegar a otra vista
+  viewDetails(id: any) {
+    this.router.navigate([`subcursal/groups/tickets/${id}`]);
   }
 
 }
