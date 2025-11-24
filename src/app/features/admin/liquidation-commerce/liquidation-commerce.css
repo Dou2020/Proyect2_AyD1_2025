@@ -1,0 +1,52 @@
+/* Responsive table scrolling */
+.table-container {
+  overflow-x: auto;
+}
+
+/* Button hover effects */
+.back-button:hover svg {
+  transform: translateX(-2px);
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobile-stack > * {
+    width: 100%;
+  }
+}
+
+/* Status badges */
+.status-badge {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Card hover effects */
+.discount-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.discount-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

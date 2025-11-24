@@ -6,14 +6,14 @@ export interface Discount {
   costs: number;
 }
 
-export interface liquidationModel {
+export interface LiquidationModel {
   totalToPay: number;
   startDate: string; // 'YYYY-MM-DD'
   endDate: string;   // 'YYYY-MM-DD'
   discounts: Discount[];
 }
 
-export interface paramLiquidationModel {
+export interface ParamLiquidationModel {
   startDate: string; // 'YYYY-MM-DD'
   endDate: string;   // 'YYYY-MM-DD'
 }

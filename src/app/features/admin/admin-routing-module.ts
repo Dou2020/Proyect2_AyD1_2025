@@ -18,12 +18,14 @@ const routes: Routes = [
       { path: 'subcursales/:id/comercios', loadComponent: () => import('./commerce/commerce').then(c => c.Commerce) },
       { path: 'subcursales/:id/tarifas', loadComponent: () => import('./subcursal-fee/subcursal-fee').then(c => c.SubcursalFee) },
       { path: 'subcursales/:id/dashboard', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) },
+      { path: 'liquidation-commerce/:commerceId', loadComponent: () => import('./liquidation-commerce/liquidation-commerce').then(c => c.LiquidationCommerce) },
       { path: 'grupos', loadComponent: () => import('./group/group').then(c => c.Group) },
       { path: 'grupos/:groupId/tickets', loadComponent: () => import('./ticket-group/ticket-group').then(c => c.TicketGroup) },
       { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
       { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./reports/reports').then(c => c.Reports) },
+      { path: 'liquidaciones', loadComponent: () => import('./liquidations-overview/liquidations-overview').then(c => c.LiquidationsOverview) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   }

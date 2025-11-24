@@ -185,4 +185,8 @@ export class Commerce implements OnInit {
       }
     });
   }
+
+  viewLiquidation(commerceId: number) {
+    this.router.navigate(['/admin/liquidation-commerce', commerceId]);
+  }
 }

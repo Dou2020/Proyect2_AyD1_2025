@@ -34,6 +34,11 @@ const routes: Routes = [
         path: 'descuentos',
         loadComponent: () => import('./discount/discount').then(m => m.Discount),
         canActivate: [authGuard]
+      },
+      {
+        path: 'liquidacion',
+        loadComponent: () => import('./liquidation/liquidation').then(m => m.Liquidation),
+        canActivate: [authGuard]
       }
     ]
   }

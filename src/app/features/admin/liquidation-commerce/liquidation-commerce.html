@@ -1,0 +1,256 @@
+<div class="min-h-screen bg-gray-50 p-4">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center gap-4 mb-4">
+      <button
+        (click)="goBack()"
+        class="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 back-button"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Volver
+      </button>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Liquidación de Comercio</h1>
+    <p class="text-gray-600">Gestión y seguimiento de liquidaciones por período</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage()" class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-3">
+    <svg class="w-5 h-5 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Date Range Selection -->
+  <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+    <div class="flex flex-col md:flex-row items-start md:items-end gap-4">
+      <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="startDate" class="block text-sm font-medium text-gray-700 mb-2">Fecha de inicio</label>
+          <input
+            id="startDate"
+            type="date"
+            [(ngModel)]="startDate"
+            (change)="onDateRangeChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+        <div>
+          <label for="endDate" class="block text-sm font-medium text-gray-700 mb-2">Fecha de fin</label>
+          <input
+            id="endDate"
+            type="date"
+            [(ngModel)]="endDate"
+            (change)="onDateRangeChange()"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+        <button
+          (click)="loadLiquidationData()"
+          [disabled]="isLoading()"
+          class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <svg *ngIf="isLoading()" class="w-4 h-4 mr-2 animate-spin inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          {{ isLoading() ? 'Cargando...' : 'Consultar' }}
+        </button>
+        <button
+          (click)="processLiquidation()"
+          [disabled]="isLoading() || !liquidationData()"
+          class="w-full sm:w-auto px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Procesar Liquidación
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="text-center py-12">
+    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    <p class="mt-2 text-gray-600">Cargando datos de liquidación...</p>
+  </div>
+
+  <!-- Liquidation Summary -->
+  <div *ngIf="liquidationData() && !isLoading()" class="mb-8">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <!-- Total to Pay -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium text-gray-500">Total a Pagar</p>
+            <p class="text-2xl font-semibold text-green-600">{{ formatCurrency(liquidationData()!.totalToPay) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Period Range -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium text-gray-500">Período</p>
+            <p class="text-sm font-semibold text-blue-600">
+              {{ formatDate(liquidationData()!.startDate) }} - {{ formatDate(liquidationData()!.endDate) }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Discounts -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium text-gray-500">Total Descuentos</p>
+            <p class="text-2xl font-semibold text-purple-600">{{ totalDiscountsCount() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Used Discounts -->
+      <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium text-gray-500">Descuentos Usados</p>
+            <p class="text-2xl font-semibold text-yellow-600">
+              {{ usedDiscountsCount() }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discounts Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <!-- Table Header -->
+      <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h3 class="text-lg font-medium text-gray-900">Descuentos del Período</h3>
+          <div class="flex items-center gap-4">
+            <div>
+              <select
+                (change)="onFilterChange($event)"
+                class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="all">Todos los descuentos</option>
+                <option value="used">Solo usados</option>
+                <option value="unused">Solo pendientes</option>
+              </select>
+            </div>
+            <div class="text-sm text-gray-500">
+              {{ filteredDiscounts().length }} descuento{{ filteredDiscounts().length === 1 ? '' : 's' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Content -->
+      <div class="overflow-x-auto">
+        <div *ngIf="filteredDiscounts().length === 0" class="text-center py-12">
+          <div class="bg-gray-100 rounded-full p-6 mb-4 mx-auto w-fit">
+            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No hay descuentos</h3>
+          <p class="text-gray-500">No se encontraron descuentos para el período y filtro seleccionados.</p>
+        </div>
+
+        <!-- Desktop Table -->
+        <table *ngIf="filteredDiscounts().length > 0" class="min-w-full divide-y divide-gray-200 hidden lg:table">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Horas</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Pago</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let discount of filteredDiscounts(); trackBy: trackByDiscountId" class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{{ discount.id }}</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  [class]="'px-2 py-1 text-xs font-medium rounded-full border ' + getDiscountStatusClass(discount.used)"
+                >
+                  {{ getDiscountStatusText(discount.used) }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ discount.hours }}h</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatCurrency(discount.costs) }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ discount.used ? formatDateTime(discount.payedAt) : '-' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Mobile/Tablet Cards -->
+        <div *ngIf="filteredDiscounts().length > 0" class="lg:hidden divide-y divide-gray-200">
+          <div *ngFor="let discount of filteredDiscounts(); trackBy: trackByDiscountId"
+               class="p-4 hover:bg-gray-50 transition-colors">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-3">
+                <span class="font-medium text-gray-900">#{{ discount.id }}</span>
+                <span
+                  [class]="'px-2 py-1 text-xs font-medium rounded-full border ' + getDiscountStatusClass(discount.used)"
+                >
+                  {{ getDiscountStatusText(discount.used) }}
+                </span>
+              </div>
+              <span class="text-lg font-semibold text-gray-900">{{ formatCurrency(discount.costs) }}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-500">Horas:</span>
+                <span class="ml-1 font-medium">{{ discount.hours }}h</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Fecha de pago:</span>
+                <span class="ml-1">{{ discount.used ? formatDateTime(discount.payedAt) : '-' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State (No Data) -->
+  <div *ngIf="!liquidationData() && !isLoading()" class="bg-white rounded-lg shadow-sm p-12 text-center">
+    <div class="bg-gray-100 rounded-full p-6 mb-4 mx-auto w-fit">
+      <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Sin datos de liquidación</h3>
+    <p class="text-gray-500 mb-6">Selecciona un rango de fechas y presiona "Consultar" para ver los datos de liquidación.</p>
+  </div>
+</div>

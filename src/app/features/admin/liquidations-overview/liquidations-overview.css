@@ -1,0 +1,81 @@
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .mobile-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobile-stack > * {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animation for loading states */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Card hover effects */
+.commerce-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.commerce-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Button animations */
+.liquidation-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.liquidation-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+/* Status badge styles */
+.status-badge {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Search input focus styles */
+.search-input:focus {
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Select dropdown styles */
+.subcursal-select {
+  transition: all 0.2s ease-in-out;
+}
+
+.subcursal-select:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Grid responsive adjustments */
+@media (max-width: 1024px) {
+  .commerce-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .commerce-grid {
+    grid-template-columns: 1fr;
+  }
+}
