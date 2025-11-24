@@ -55,5 +55,5 @@ export interface GroupTicketModel {
   quantity: number;
   extraCost: number;
   isAvailable: boolean;
-  ticket: TicketModel;
+  ticket: TicketModel | null;
 }

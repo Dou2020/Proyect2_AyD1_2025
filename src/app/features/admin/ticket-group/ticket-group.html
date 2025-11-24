@@ -90,7 +90,7 @@
         <div class="flex items-start justify-between">
           <div class="flex-1">
             <h3 class="text-lg font-semibold text-gray-900 mb-1">
-              Ticket #{{ groupTicket.ticket.id }}
+              Ticket #{{ groupTicket.ticket?.id ?? 'Pendiente' }}
             </h3>
 
             <p class="text-sm text-gray-600">
@@ -126,17 +126,17 @@
 
           <div class="ml-6 space-y-1">
             <p class="text-sm text-gray-900 font-medium">
-              {{ groupTicket.ticket.vehicle.plate }}
+              {{ groupTicket.ticket?.vehicle?.plate ?? 'Pendiente' }}
             </p>
 
             <div class="flex items-center gap-2">
               <span class="text-xs text-gray-500">
-                {{ groupTicket.ticket.vehicle.color }}
+                {{ groupTicket.ticket?.vehicle?.color ?? 'Pendiente' }}
               </span>
 
               <span [class]="'px-2 py-1 text-xs font-medium rounded-full ' +
-                          getVehicleTypeClass(groupTicket.ticket.vehicle.type)">
-                {{ groupTicket.ticket.vehicle.type }}
+                          getVehicleTypeClass(groupTicket.ticket?.vehicle?.type)">
+                {{ groupTicket.ticket?.vehicle?.type ?? 'Pendiente' }}
               </span>
             </div>
           </div>
@@ -157,7 +157,7 @@
           </div>
 
           <p class="text-sm text-gray-700 ml-6">
-            {{ groupTicket.ticket.sucursal.address }}
+            {{ groupTicket.ticket?.sucursal?.address ?? 'Pendiente' }}
           </p>
         </div>
 
@@ -167,14 +167,14 @@
             <div>
               <p class="text-xs text-gray-500 mb-1">Inicio</p>
               <p class="text-sm font-medium text-gray-900">
-                {{ groupTicket.ticket.createdAt ? formatDate(groupTicket.ticket.createdAt) : 'Pendiente' }}
+                {{ (groupTicket.ticket && groupTicket.ticket.createdAt) ? formatDate(groupTicket.ticket.createdAt) : 'Pendiente' }}
               </p>
             </div>
 
             <div>
               <p class="text-xs text-gray-500 mb-1">Fin</p>
               <p class="text-sm font-medium text-gray-900">
-                {{ groupTicket.ticket.endAt ? formatDate(groupTicket.ticket.endAt) : 'Pendiente' }}
+                {{ (groupTicket.ticket && groupTicket.ticket.endAt) ? formatDate(groupTicket.ticket.endAt) : 'Pendiente' }}
               </p>
             </div>
           </div>
@@ -185,14 +185,14 @@
           <div class="flex items-center justify-between text-sm">
             <span class="text-gray-600">Precio:</span>
             <span class="font-medium text-gray-900">
-              {{ groupTicket.ticket.price ? formatCurrency(groupTicket.ticket.price) : 'Pendiente' }}
+              {{ (groupTicket.ticket && groupTicket.ticket.price) ? formatCurrency(groupTicket.ticket.price) : 'Pendiente' }}
             </span>
           </div>
 
           <div class="flex items-center justify-between text-sm">
             <span class="text-gray-600">Precio Real:</span>
             <span class="font-medium text-green-600">
-              {{ groupTicket.ticket.realPrice ? formatCurrency(groupTicket.ticket.realPrice) : 'Pendiente' }}
+              {{ (groupTicket.ticket && groupTicket.ticket.realPrice) ? formatCurrency(groupTicket.ticket.realPrice) : 'Pendiente' }}
             </span>
           </div>
 
@@ -208,7 +208,7 @@
           <div class="flex items-center justify-between text-sm font-semibold">
             <span class="text-gray-900">Total:</span>
             <span class="text-lg text-green-600">
-              {{ groupTicket.ticket.realPrice
+              {{ (groupTicket.ticket && groupTicket.ticket.realPrice)
               ? formatCurrency(groupTicket.ticket.realPrice + groupTicket.extraCost)
               : 'Pendiente' }}
             </span>
@@ -216,7 +216,7 @@
         </div>
 
         <!-- Discount Info -->
-        @if (groupTicket.ticket.discount) {
+        @if (groupTicket.ticket?.discount) {
         <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
           <div class="flex items-center text-sm text-yellow-800 mb-2">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -228,11 +228,11 @@
           </div>
 
           <p class="text-xs text-yellow-700 ml-6">
-            {{ groupTicket.ticket.discountType }}
+            {{ groupTicket.ticket?.discountType ?? 'Pendiente' }}
           </p>
 
           <p class="text-xs text-yellow-700 ml-6">
-            {{ groupTicket.ticket.discount.hours }} horas
+            {{ groupTicket.ticket?.discount?.hours ?? 'Pendiente' }} horas
           </p>
         </div>
         }

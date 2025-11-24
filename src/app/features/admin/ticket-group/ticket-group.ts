@@ -44,9 +44,14 @@ export class TicketGroup implements OnInit {
     if (!search) return tickets;
 
     return tickets.filter(ticket => {
-      return ticket.ticket.sucursal.address.toLowerCase().includes(search) ||
-             ticket.ticket.vehicle.plate.toLowerCase().includes(search) ||
-             ticket.ticket.vehicle.color.toLowerCase().includes(search) ||
+      // Check if ticket exists before accessing its properties
+      if (!ticket.ticket) {
+        return false;
+      }
+
+      return ticket.ticket.sucursal?.address?.toLowerCase().includes(search) ||
+             ticket.ticket.vehicle?.plate?.toLowerCase().includes(search) ||
+             ticket.ticket.vehicle?.color?.toLowerCase().includes(search) ||
              ticket.quantity.toString().includes(search);
     });
   });
