@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from './../../../enviroments/enviroments';
 import { AppUser } from '../models/public/appUser';
+import { RegisterModel } from '../models/register.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,9 @@ export class PublicService {
   constructor(private http: HttpClient) {}
 
   // Metodo de registro
-  registerUser(payload: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, payload);
+  registerUser(payload: RegisterModel): Observable<any> {
+    console.log('Registering user with payload:', payload);
+    return this.http.post(`${this.baseUrl}/user/register/client`, payload);
   }
 
   // reenvio de codigo de verificacion

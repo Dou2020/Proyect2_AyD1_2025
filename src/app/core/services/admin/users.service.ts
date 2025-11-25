@@ -18,12 +18,14 @@ export class UserService {
 
   // Registrar un nuevo usuario
   registerUser(payload: Partial<UserModel>): Observable<UserModel> {
-    return this.http.post<UserModel>(`${this.baseUrl}/users`, payload);
+    console.log('Registering user with payload:', payload);
+    return this.http.post<UserModel>(`${this.baseUrl}/user/register/client`, payload);
   }
 
   // Actualizar un usuario existente
   updateUser(id: number, payload: Partial<UserModel>): Observable<UserModel> {
-    return this.http.put<UserModel>(`${this.baseUrl}/users/${id}`, payload);
+    console.log('Updating user with ID:', id, 'Payload:', payload);
+    return this.http.put<UserModel>(`${this.baseUrl}/user/users/${id}`, payload);
   }
 
   // Eliminar un usuario

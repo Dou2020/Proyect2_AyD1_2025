@@ -20,11 +20,13 @@ export class SubcursalService {
 
   // Crear una nueva subcursal
   createSubcursal(payload: SubcursalCreateModel): Observable<SubcursalModel> {
+    console.log('Creating subcursal with payload:', payload);
     return this.http.post<SubcursalModel>(`${this.baseUrl}/sucursal`, payload);
   }
 
   // Actualizar una subcursal existente
   updateSubcursal(id: number, payload: SubcursalUpdateModel): Observable<SubcursalModel> {
+    console.log('Updating subcursal with ID:', id, 'Payload:', payload);
     return this.http.put<SubcursalModel>(`${this.baseUrl}/sucursal/${id}`, payload);
   }
 

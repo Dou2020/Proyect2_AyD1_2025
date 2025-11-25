@@ -4,22 +4,9 @@ import { FormsModule, FormBuilder, FormGroup, Validators, AbstractControl, Valid
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertService } from '../../utils/alert-modal/alert.service';
-// import { Public as PublicService } from './../../../core/services/public';
+import { PublicService } from './../../../core/services/public.service';
+import { RegisterModel } from './../../../core/models/register.model';
 
-export function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-  const password = control.get('passwordHash');
-  const confirmPassword = control.get('confirmPassword');
-
-  if (password?.value !== confirmPassword?.value) {
-    confirmPassword?.setErrors({ mismatch: true });
-    return { mismatch: true };
-  } else {
-    if (confirmPassword?.hasError('mismatch')) {
-      confirmPassword.setErrors(null);
-    }
-    return null;
-  }
-}
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -42,67 +29,44 @@ export class Register implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private alertService: AlertService
-    //private publicService: PublicService
+    private alertService: AlertService,
+    private publicService: PublicService
   ) { }
 
   ngOnInit(): void {
     this.registrationForm = this.fb.group({
-      appUser: this.fb.group({
-        name: ['', Validators.required],
-        lastname: ['', Validators.required],
-        username: ['', [Validators.required, Validators.minLength(4)]],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', Validators.required],
-        passwords: this.fb.group({
-          passwordHash: ['', [Validators.required, Validators.minLength(8)]],
-          confirmPassword: ['', Validators.required]
-        }, { validators: passwordMatchValidator })
-      }),
-      location: this.fb.group({
-        name: ['', Validators.required],
-        address: ['', Validators.required],
-        area: ['', Validators.required],
-        notes: ['']
-      })
+      name: ['', Validators.required],
+      username: ['', [Validators.required, Validators.minLength(4)]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', Validators.required],
+      mfaActivated: [false] // Default to false
     });
   }
 
   //getters
-  get name() { return this.registrationForm.get('appUser.name'); }
-  get lastname() { return this.registrationForm.get('appUser.lastname'); }
-  get username() { return this.registrationForm.get('appUser.username'); }
-  get email() { return this.registrationForm.get('appUser.email'); }
-  get phoneNumber() { return this.registrationForm.get('appUser.phoneNumber'); }
-  get password() { return this.registrationForm.get('appUser.passwords.passwordHash'); }
-  get confirmPassword() { return this.registrationForm.get('appUser.passwords.confirmPassword'); }
-  get locationName() { return this.registrationForm.get('location.name'); }
-  get address() { return this.registrationForm.get('location.address'); }
-  get area() { return this.registrationForm.get('location.area'); }
+  get name() { return this.registrationForm.get('name'); }
+  get username() { return this.registrationForm.get('username'); }
+  get email() { return this.registrationForm.get('email'); }
+  get phoneNumber() { return this.registrationForm.get('phoneNumber'); }
+  get mfaActivated() { return this.registrationForm.get('mfaActivated'); }
 
 
 
 
-  getPayload(): any {
-    const appUserGroup = this.registrationForm.get('appUser') as FormGroup;
-    const passwordsGroup = appUserGroup.get('passwords') as FormGroup;
-    const locationGroup = this.registrationForm.get('location') as FormGroup;
-
+  getPayload(): RegisterModel {
     return {
-      appUser: {
-        username: appUserGroup.get('username')?.value,
-        passwordHash: passwordsGroup.get('passwordHash')?.value,
-        phoneNumber: appUserGroup.get('phoneNumber')?.value,
-        name: appUserGroup.get('name')?.value,
-        lastname: appUserGroup.get('lastname')?.value,
-        email: appUserGroup.get('email')?.value
-      },
+      username: this.registrationForm.get('username')?.value,
+      name: this.registrationForm.get('name')?.value,
+      email: this.registrationForm.get('email')?.value,
+      phoneNumber: this.registrationForm.get('phoneNumber')?.value,
+      role: 'CLIENT', // Always CLIENT for client registration
+      mfaActivated: this.registrationForm.get('mfaActivated')?.value || false
     };
   }
 
 
 
-  register(): void {
+    register(): void {
     if (this.registrationForm.invalid) {
       this.registrationForm.markAllAsTouched();
 
@@ -116,43 +80,35 @@ export class Register implements OnInit {
       return;
     }
 
-    // Simular proceso de registro
+    // Crear payload con el modelo correcto
     const payload = this.getPayload();
-    this.simulateRegistration(payload);
-  }
 
-  private simulateRegistration(payload: any): void {
-    // Simular diferentes escenarios
-    const email = payload.appUser.email;
-    const username = payload.appUser.username;
+    // Llamar al servicio de registro
+    this.publicService.registerUser(payload).subscribe({
+      next: (response) => {
+        this.alertService.showSuccess('¡Cuenta creada exitosamente! Revisa tu email para activar tu cuenta');
+        this.registrationForm.reset();
 
-    // Simular verificaciones
-    if (email === 'existing@example.com') {
-      this.alertService.showError('Este email ya está registrado', 409);
-      return;
-    }
+        // Redirigir al login después de un breve retraso
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Error en el registro:', error);
 
-    if (username === 'admin' || username === 'root') {
-      this.alertService.showError('Nombre de usuario no disponible', 400);
-      return;
-    }
-
-    // Simular error de servidor
-    if (email.includes('error')) {
-      this.alertService.showError('Error interno del servidor. Inténtalo más tarde', 500);
-      return;
-    }
-
-    // Simular registro exitoso
-    setTimeout(() => {
-      this.alertService.showSuccess('¡Cuenta creada exitosamente! Revisa tu email para activar tu cuenta');
-      this.registrationForm.reset();
-
-      // Redirigir al login después de un breve retraso
-      setTimeout(() => {
-        this.router.navigate(['/login']);
-      }, 2000);
-    }, 1000);
+        // Manejar diferentes tipos de errores
+        if (error.status === 409) {
+          this.alertService.showError('Este email o usuario ya está registrado', 409);
+        } else if (error.status === 400) {
+          this.alertService.showError('Datos inválidos. Por favor verifica la información ingresada', 400);
+        } else if (error.status === 500) {
+          this.alertService.showError('Error interno del servidor. Inténtalo más tarde', 500);
+        } else {
+          this.alertService.showError('Error al crear la cuenta. Inténtalo más tarde', error.status || 0);
+        }
+      }
+    });
   }
 
   private getFormErrors(): string[] {
@@ -160,10 +116,6 @@ export class Register implements OnInit {
 
     if (this.name?.invalid && this.name?.touched) {
       errors.push('Nombre requerido');
-    }
-
-    if (this.lastname?.invalid && this.lastname?.touched) {
-      errors.push('Apellido requerido');
     }
 
     if (this.username?.invalid && this.username?.touched) {
@@ -184,32 +136,6 @@ export class Register implements OnInit {
 
     if (this.phoneNumber?.invalid && this.phoneNumber?.touched) {
       errors.push('Teléfono requerido');
-    }
-
-    if (this.password?.invalid && this.password?.touched) {
-      if (this.password?.errors?.['required']) {
-        errors.push('Contraseña requerida');
-      } else if (this.password?.errors?.['minlength']) {
-        errors.push('Contraseña debe tener al menos 8 caracteres');
-      }
-    }
-
-    if (this.confirmPassword?.invalid && this.confirmPassword?.touched) {
-      if (this.confirmPassword?.errors?.['mismatch']) {
-        errors.push('Las contraseñas no coinciden');
-      }
-    }
-
-    if (this.locationName?.invalid && this.locationName?.touched) {
-      errors.push('Nombre de ubicación requerido');
-    }
-
-    if (this.address?.invalid && this.address?.touched) {
-      errors.push('Dirección requerida');
-    }
-
-    if (this.area?.invalid && this.area?.touched) {
-      errors.push('Área requerida');
     }
 
     return errors;
