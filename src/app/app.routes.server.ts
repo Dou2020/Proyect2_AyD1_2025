@@ -34,7 +34,7 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server
   },
   {
-    path: 'groups/tickets/:groupId',
+    path: 'subcursal/groups/tickets/:groupId',
     renderMode: RenderMode.Server
   },
   {
