@@ -143,6 +143,12 @@ export class Dashboard implements OnInit, OnDestroy {
     this.loadDashboardData();
   }
 
+  // Método para navegar a acciones rápidas
+  navigateToQuickActions(): void {
+    this.router.navigate(['/admin/acciones-rapidas']);
+    this.alertService.showInfo('Navegando a acciones rápidas...');
+  }
+
   // Getters para compatibilidad con la plantilla existente
   get totalUsers(): number {
     return this.ingresos;

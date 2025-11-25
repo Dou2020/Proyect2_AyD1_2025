@@ -1,0 +1,90 @@
+<!-- Quick Actions Component -->
+<div class="quick-actions-container">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">Acciones Rápidas</h1>
+      <p class="text-lg text-slate-600">Accede rápidamente a las funciones principales del sistema</p>
+    </div>
+  </div>
+
+  <!-- Quick Actions Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+    <div
+      *ngFor="let action of actions"
+      class="quick-action-card bg-white rounded-xl shadow-sm border border-slate-200 p-6 cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1"
+      [ngClass]="getColorClasses(action.color).border + ' ' + getColorClasses(action.color).hover"
+      (click)="executeAction(action)"
+    >
+      <!-- Icon -->
+      <div class="flex items-center justify-center w-12 h-12 rounded-lg mb-4 mx-auto"
+           [ngClass]="getColorClasses(action.color).bg">
+        <svg class="w-6 h-6"
+             [ngClass]="getColorClasses(action.color).text"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                [attr.d]="getIconSvg(action.icon)"></path>
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <div class="text-center">
+        <h3 class="text-lg font-semibold text-slate-900 mb-2">{{ action.title }}</h3>
+        <p class="text-sm text-slate-600 leading-relaxed">{{ action.description }}</p>
+      </div>
+
+      <!-- Arrow indicator -->
+      <div class="flex justify-center mt-4">
+        <svg class="w-5 h-5 text-slate-400 transition-transform duration-200 group-hover:translate-x-1"
+             fill="none"
+             stroke="currentColor"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Info Section -->
+  <div class="mt-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-white">
+    <div class="flex flex-col lg:flex-row items-center justify-between">
+      <div class="text-center lg:text-left mb-6 lg:mb-0">
+        <h2 class="text-2xl font-bold mb-2">Centro de Administración</h2>
+        <p class="text-blue-100 text-lg">
+          Gestiona eficientemente todos los aspectos de tu sistema desde un solo lugar
+        </p>
+      </div>
+      <div class="hidden lg:block">
+        <svg class="w-24 h-24 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded-lg p-6 text-center shadow-sm border border-slate-200">
+      <div class="text-2xl font-bold text-blue-600 mb-2">8</div>
+      <div class="text-sm text-slate-600">Funciones Principales</div>
+    </div>
+    <div class="bg-white rounded-lg p-6 text-center shadow-sm border border-slate-200">
+      <div class="text-2xl font-bold text-green-600 mb-2">24/7</div>
+      <div class="text-sm text-slate-600">Disponibilidad</div>
+    </div>
+    <div class="bg-white rounded-lg p-6 text-center shadow-sm border border-slate-200">
+      <div class="text-2xl font-bold text-purple-600 mb-2">100%</div>
+      <div class="text-sm text-slate-600">Acceso Seguro</div>
+    </div>
+  </div>
+</div>

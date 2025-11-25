@@ -23,6 +23,7 @@ const routes: Routes = [
       { path: 'grupos/:groupId/tickets', loadComponent: () => import('./ticket-group/ticket-group').then(c => c.TicketGroup) },
       { path: 'perfil', loadComponent: () => import('./profile/profile').then(c => c.Profile) },
       { path: 'subscription', loadComponent: () => import('./subscription/subscription').then(c => c.Subscription) },
+      { path: 'acciones-rapidas', loadComponent: () => import('./quick-actions/quick-actions').then(c => c.QuickActions) },
       { path: 'configuracion', loadComponent: () => import('./dashboard/dashboard').then(c => c.Dashboard) }, // Placeholder
       { path: 'reportes', loadComponent: () => import('./reports/reports').then(c => c.Reports) },
       { path: 'liquidaciones', loadComponent: () => import('./liquidations-overview/liquidations-overview').then(c => c.LiquidationsOverview) },

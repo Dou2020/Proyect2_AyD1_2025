@@ -50,12 +50,151 @@
 /* Mejoras responsivas */
 @media (max-width: 640px) {
   .dashboard-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 
-  .dashboard-stats > div:nth-child(3),
-  .dashboard-stats > div:nth-child(4) {
-    grid-column: span 2;
+  /* Header responsive */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Cards responsive */
+  .dashboard-card {
+    padding: 1rem;
+
+    .text-lg {
+      font-size: 1rem;
+    }
+
+    .text-sm {
+      font-size: 0.75rem;
+    }
+  }
+
+  /* Buttons responsive */
+  .flex.space-x-3 {
+    flex-direction: column;
+    space-x: 0;
+    gap: 0.5rem;
+
+    button {
+      width: 100%;
+      padding: 0.75rem 1rem;
+    }
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Table responsive */
+  .overflow-x-auto table {
+    font-size: 0.875rem;
+
+    th, td {
+      padding: 0.75rem;
+    }
+  }
+}
+
+/* Large tablet and small desktop */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop and larger */
+@media (min-width: 1281px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Quick actions responsive */
+.grid.grid-cols-1.lg\\:grid-cols-2 {
+  @media (max-width: 1023px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Welcome message responsive */
+.bg-gradient-to-r {
+  @media (max-width: 640px) {
+    padding: 1.25rem;
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+
+    .hidden.sm\\:block {
+      display: none;
+    }
+  }
+}
+
+/* Alert demo section responsive */
+.grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-4 {
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+
+    button {
+      padding: 0.75rem;
+
+      .w-12.h-12 {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .text-sm {
+        font-size: 0.75rem;
+      }
+
+      .text-xs {
+        font-size: 0.65rem;
+      }
+    }
+  }
+}
+
+/* Stats table responsive improvements */
+@media (max-width: 768px) {
+  .min-w-full {
+    min-width: 600px;
+  }
+
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Loading spinner responsive */
+.flex.justify-center.items-center.h-64 {
+  @media (max-width: 640px) {
+    height: 8rem;
+
+    .h-16.w-16 {
+      height: 3rem;
+      width: 3rem;
+    }
+
+    span {
+      margin-left: 0.75rem;
+      font-size: 0.875rem;
+    }
   }
 }
 

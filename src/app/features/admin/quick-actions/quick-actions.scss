@@ -1,0 +1,210 @@
+/* Quick Actions Component Styles */
+.quick-actions-container {
+  min-height: 100vh;
+  padding: 1rem;
+
+  /* Responsive padding */
+  @media (min-width: 640px) {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 2rem;
+  }
+}
+
+/* Quick Action Cards */
+.quick-action-card {
+  position: relative;
+  overflow: hidden;
+
+  /* Card hover animations */
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Responsive card sizing */
+  @media (max-width: 639px) {
+    padding: 1.25rem;
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+  }
+
+  @media (min-width: 640px) and (max-width: 1023px) {
+    padding: 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 2rem;
+  }
+
+  /* Icon container responsive sizing */
+  .w-12.h-12 {
+    @media (max-width: 639px) {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+}
+
+/* Grid responsive adjustments */
+.grid {
+  /* Mobile: 1 column */
+  @media (max-width: 639px) {
+    gap: 1rem;
+  }
+
+  /* Tablet: 2 columns */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    gap: 1.25rem;
+  }
+
+  /* Desktop: 3-4 columns */
+  @media (min-width: 1024px) {
+    gap: 1.5rem;
+  }
+}
+
+/* Header responsive text sizing */
+h1 {
+  @media (max-width: 639px) {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 640px) and (max-width: 1023px) {
+    font-size: 2.5rem;
+  }
+}
+
+/* Subtitle responsive text sizing */
+.text-lg {
+  @media (max-width: 639px) {
+    font-size: 1rem;
+  }
+}
+
+/* Gradient section responsive adjustments */
+.bg-gradient-to-r {
+  @media (max-width: 1023px) {
+    padding: 1.5rem;
+    text-align: center;
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    padding: 1.25rem;
+    margin-top: 2rem;
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* Stats section responsive */
+.grid.grid-cols-1.sm\\:grid-cols-3 {
+  @media (max-width: 639px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  > div {
+    @media (max-width: 639px) {
+      padding: 1rem;
+
+      .text-2xl {
+        font-size: 1.5rem;
+      }
+
+      .text-sm {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}
+
+/* Animation enhancements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quick-action-card {
+  animation: fadeInUp 0.6s ease-out;
+
+  /* Stagger animation delay for grid items */
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+  &:nth-child(6) { animation-delay: 0.6s; }
+  &:nth-child(7) { animation-delay: 0.7s; }
+  &:nth-child(8) { animation-delay: 0.8s; }
+}
+
+/* Touch improvements for mobile */
+@media (max-width: 1023px) {
+  .quick-action-card {
+    /* Increase touch target size */
+    min-height: 140px;
+
+    /* Better tap feedback */
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+/* Dark mode support (if needed in the future) */
+@media (prefers-color-scheme: dark) {
+  .quick-actions-container {
+    /* Dark mode styles can be added here */
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .quick-action-card {
+    border-width: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .quick-action-card {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
