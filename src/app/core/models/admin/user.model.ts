@@ -11,6 +11,14 @@ export interface UserModel {
   daysToPay: number;
 }
 
+export interface UserUpdateModel {
+  username: string;
+  email: string;
+  name: string;
+  status: 'ACTIVE' | 'INACTIVE' | string;
+  mfaActivated: boolean;
+}
+
 export interface UserSimpleModel {
   id: number;
   username: string;
@@ -19,6 +27,14 @@ export interface UserSimpleModel {
 }
 
 export interface UserSubcursalModel {
+  username: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  mfaActivated: boolean;
+}
+
+export interface CommerceCreateModel {
   username: string;
   name: string;
   email: string;
