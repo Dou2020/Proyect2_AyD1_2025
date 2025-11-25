@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertService } from '../../utils/alert-modal/alert.service';
+import { sucursalService } from '../../../core/services/sucursal/sucursal.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,85 +10,45 @@ import { AlertService } from '../../utils/alert-modal/alert.service';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
-export class Dashboard {
-  // Datos de ejemplo para el dashboard de sucursal
-  totalServices = 48;
-  activeClients = 127;
-  pendingRequests = 6;
-  completedToday = 12;
+export class Dashboard implements OnInit{
 
-  constructor(private alertService: AlertService) {
-    // Mostrar mensaje de bienvenida
-    this.alertService.showSuccess('Panel de Sucursal cargado correctamente');
+  originalData: any = null;
+  currentData: any = null;
+  sucursalId = 0;
 
-    // Cargar datos del dashboard
-    this.loadDashboardData();
+  private refreshSub!: Subscription;
+
+  constructor(
+    private sucursalService: sucursalService
+  ){}
+
+  ngOnInit(): void {
+    this.loadInitialData();
+    this.setupAutoRefresh();
   }
 
-  private loadDashboardData(): void {
-    // Simular carga de datos con manejo de errores
-    setTimeout(() => {
-      // Simular diferentes escenarios
-      const random = Math.random();
-
-      if (random < 0.1) {
-        // 10% de probabilidad de error
-        this.alertService.showError('Error al cargar algunos datos del dashboard', 500);
-      } else if (random < 0.2) {
-        // 10% de probabilidad de advertencia
-        this.alertService.showWarning('Algunos servicios están experimentando demoras');
-      }
-
-      this.totalServices = Math.floor(Math.random() * 100) + 30;
-      this.activeClients = Math.floor(Math.random() * 200) + 80;
-      this.pendingRequests = Math.floor(Math.random() * 15);
-      this.completedToday = Math.floor(Math.random() * 25) + 5;
-
-      // Mostrar alerta si hay muchas solicitudes pendientes
-      if (this.pendingRequests > 10) {
-        this.alertService.showWarning(`Tienes ${this.pendingRequests} solicitudes pendientes por atender`);
-      }
-    }, 1000);
+  loadInitialData() {
+    this.sucursalService.getProfile().subscribe(data => {
+      this.originalData = data;
+      this.sucursalId = this.originalData.id;
+      this.loadLiveData();
+    });
   }
 
-  // Métodos de ejemplo para demostrar diferentes tipos de alertas
-  processService(): void {
-    // Simular procesamiento de servicio
-    this.alertService.showInfo('Procesando servicio...');
-
-    setTimeout(() => {
-      if (Math.random() > 0.2) {
-        this.completedToday++;
-        this.pendingRequests = Math.max(0, this.pendingRequests - 1);
-        this.alertService.showSuccess('Servicio procesado exitosamente');
-      } else {
-        this.alertService.showError('Error al procesar servicio. Documentación incompleta', 400);
-      }
-    }, 2000);
+  loadLiveData() {
+    this.sucursalService.getLiveProfile(this.sucursalId).subscribe(data => {
+      this.currentData = data;
+    });
   }
 
-  registerClient(): void {
-    this.alertService.showInfo('Registrando nuevo cliente...');
-
-    setTimeout(() => {
-      this.activeClients++;
-      this.alertService.showSuccess('Cliente registrado correctamente en el sistema');
-    }, 1500);
+  setupAutoRefresh() {
+    this.refreshSub = interval(30000).subscribe(() => {
+      this.loadLiveData();
+    });
   }
 
-  generateReport(): void {
-    this.alertService.showInfo('Generando reporte de sucursal...');
-
-    setTimeout(() => {
-      this.alertService.showSuccess('Reporte generado y enviado al administrador');
-    }, 3000);
+  ngOnDestroy(): void {
+    if (this.refreshSub) this.refreshSub.unsubscribe();
   }
 
-  simulateError(): void {
-    this.alertService.showError('Error de conexión con el sistema central', 500);
-  }
-
-  clearAllAlerts(): void {
-    this.alertService.clearAll();
-  }
 }

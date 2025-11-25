@@ -18,4 +18,11 @@ export class sucursalService {
     return this.http.get<any>(`${this.baseUrl}/sucursal/profile`);
   }
 
+  /**
+   * Obtiene datos en tiempo real
+  */
+  getLiveProfile(sucursalId: any): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/adminDashboard/update/${sucursalId}`)
+  }
+
 }

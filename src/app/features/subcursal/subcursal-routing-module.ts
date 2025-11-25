@@ -31,6 +31,10 @@ const routes: Routes = [
         loadComponent: () => import('./groups/groups').then(c => c.Groups) 
       },
       { 
+        path: 'groups/tickets/:groupId', 
+        loadComponent: () => import('./ticket-group/ticket-group').then(c => c.TicketGroup) 
+      },
+      { 
         path: '', 
         redirectTo: 'dashboard', 
         pathMatch: 'full' 

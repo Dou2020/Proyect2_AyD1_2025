@@ -22,14 +22,14 @@
             @for (d of fleetDiscounts; let i = $index; track d) {
             <tr class="border-t">
                 <td class="px-4 py-2 font-medium">{{ i + 1 }}</td>
-                <td class="px-4 py-2">{{ d.discount * 100 }} %</td>
+                <td class="px-4 py-2">{{ d.discount }} %</td>
                 <td class="px-4 py-2">{{ d.from }}</td>
                 <td class="px-4 py-2">{{ d.to }}</td>
 
                 <td class="px-4 py-2">
-                    <button (click)="viewDetails(d)"
+                    <button (click)="viewDetails(d.id)"
                         class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                        Ver detalles
+                        Tickets
                     </button>
                 </td>
             </tr>

@@ -1,0 +1,124 @@
+<section>
+  <section class="p-6">
+
+    <h2 class="text-2xl font-semibold mb-6">Control de Ingreso y Egreso</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- FORMULARIO DE INGRESO -->
+      <div class="border border-gray-300 rounded-lg p-5 bg-white shadow-sm">
+
+        <h3 class="text-xl font-semibold mb-4">Registrar Ingreso</h3>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-1">ID Ticket Group</label>
+          <input type="number" class="w-full border border-gray-300 rounded p-2" [(ngModel)]="ingreso.ticketGroupId"
+            name="ticketGroupIdIngreso" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-1">Placa del Vehículo</label>
+          <input type="text" class="w-full border border-gray-300 rounded p-2" [(ngModel)]="ingreso.vehiclePlate"
+            name="vehiclePlateIngreso" />
+        </div>
+
+        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          (click)="registrarIngreso()">
+          Registrar Ingreso
+        </button>
+      </div>
+
+
+      <!-- FORMULARIO DE EGRESO -->
+      <div class="border border-gray-300 rounded-lg p-5 bg-white shadow-sm">
+
+        <h3 class="text-xl font-semibold mb-4">Registrar Egreso</h3>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-1">ID Ticket Group</label>
+          <input type="number" class="w-full border border-gray-300 rounded p-2" [(ngModel)]="egreso.ticketGroupId"
+            name="ticketGroupIdEgreso" />
+        </div>
+
+        <div class="mb-4">
+          <label class="block font-medium mb-1">Fecha y Hora de Salida</label>
+          <input type="datetime-local" class="w-full border border-gray-300 rounded p-2" [(ngModel)]="egreso.endAt"
+            name="endAtEgreso" />
+        </div>
+
+        <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+          (click)="registrarEgreso()">
+          Registrar Egreso
+        </button>
+      </div>
+
+    </div>
+
+  </section>
+  <section class="p-6">
+    <h2 class="text-2xl font-semibold mb-6">Listado de Tickets de Grupo</h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      @for (g of groupTickets; track g.id) {
+
+      <div class="border border-gray-300 rounded-lg shadow-sm p-4 bg-white">
+
+        <h3 class="text-lg font-semibold mb-2">
+          Ticket grupal con id = {{ g.id }}
+        </h3>
+
+        <div class="border-t border-gray-200 my-3"></div>
+
+        @if (g.ticket == null) {
+
+        <p class="text-yellow-600 text-sm font-medium">
+          Aún no se ha usado este ticket
+        </p>
+
+        } @else {
+
+        <h4 class="text-md font-semibold mb-2">Ticket</h4>
+
+        <div class="p-3 bg-slate-50 border border-gray-200 rounded">
+
+          <p class="text-sm"><b>ID:</b> {{ g.ticket.id }}</p>
+          <p class="text-sm"><b>Precio:</b> {{ g.ticket.price }}</p>
+          <p class="text-sm"><b>Real:</b> {{ g.ticket.realPrice }}</p>
+          <p class="text-sm mb-2"><b>Desc.:</b> {{ g.ticket.discountType }}</p>
+
+          <div class="border-t border-gray-200 my-2"></div>
+
+          <!-- Vehículo -->
+          @if (g.ticket.vehicle) {
+          <h5 class="font-semibold text-sm mb-1">Vehículo</h5>
+          <p class="text-sm"><b>Placa:</b> {{ g.ticket.vehicle.plate }}</p>
+          <p class="text-sm"><b>Color:</b> {{ g.ticket.vehicle.color }}</p>
+          <p class="text-sm mb-2"><b>Tipo:</b> {{ g.ticket.vehicle.type }}</p>
+          }
+
+          <!-- Descuento -->
+          @if (g.ticket.discount) {
+          <h5 class="font-semibold text-sm mb-1">Descuento</h5>
+          <p class="text-sm"><b>Usado:</b> {{ g.ticket.discount.used ? 'Sí' : 'No' }}</p>
+          <p class="text-sm"><b>Horas:</b> {{ g.ticket.discount.hours }}</p>
+          <p class="text-sm"><b>Pagado:</b> {{ g.ticket.discount.payedAt }}</p>
+          <p class="text-sm"><b>Costo:</b> {{ g.ticket.discount.costs }}</p>
+          }
+
+          <p class="text-sm"><b>Costo extra:</b> {{ g.extraCost }}</p>
+
+        </div>
+        }
+
+      </div>
+
+      } @empty {
+
+      <p>No hay tickets de grupo registrados.</p>
+
+      }
+
+    </div>
+  </section>
+</section>
